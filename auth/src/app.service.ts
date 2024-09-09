@@ -34,7 +34,7 @@ export class AppService implements OnModuleInit {
     return await firstValueFrom(
       this.client.send(
         'create_user',
-        new CreateUserEvent(loginDto.identity, loginDto.password),
+        // must contain login command creator
       ),
     );
   }
