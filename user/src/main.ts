@@ -5,18 +5,18 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
-    {
-      transport: Transport.KAFKA,
-      options: {
-        client: {
-          clientId: `user-consumer`,
-          brokers: ['localhost:9092'],
-        },
-        consumer: {
-          groupId: 'consumer',
-        },
-      },
-    },
+    // {
+    //   transport: Transport.KAFKA,
+    //   options: {
+    //     client: {
+    //       clientId: `user-consumer`,
+    //       brokers: ['localhost:9092'],
+    //     },
+    //     consumer: {
+    //       groupId: 'consumer',
+    //     },
+    //   },
+    // },
   );
   app.listen();
 }

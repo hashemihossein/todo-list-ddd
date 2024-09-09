@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './presenters/http/app.controller';
+import { AppController } from '../user-interface/http/auth-http.controller';
 import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 

@@ -1,9 +1,8 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { CreateUserEvent } from './create-user.event';
-import { RegisterDto } from './presenters/http/dto/register.dto';
-import { LoginDto } from './presenters/http/dto/login.dto';
+import { RegisterDto } from '../user-interface/http/dto/register.dto';
+import { LoginDto } from '../user-interface/http/dto/login.dto';
 
 @Injectable()
 export class AppService implements OnModuleInit {
@@ -21,11 +20,7 @@ export class AppService implements OnModuleInit {
     return await firstValueFrom(
       this.client.send(
         'create_user',
-        new CreateUserEvent(
-          registerDto.username,
-          registerDto.email,
-          registerDto.password,
-        ),
+        // must contain register command creator
       ),
     );
   }
