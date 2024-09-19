@@ -1,4 +1,5 @@
-export class IUpdateTodoListParams {
+export interface IUpdateTodoListParams {
+  id: string;
   title?: string;
   description?: string;
 }

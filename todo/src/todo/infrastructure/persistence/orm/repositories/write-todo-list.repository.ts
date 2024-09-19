@@ -14,13 +14,26 @@ export class OrmWriteTodoListRepository implements WriteTodoListRepository {
     private readonly todoListRepository: Repository<TodoListEntity>,
   ) {}
 
+  private async findById(id: string): Promise<TodoList> {
+    const todoList = await this.todoListRepository.findOne({ where: { id } });
+    return TodoListMapper.toDomain(todoList);
+  }
+
   async save(todoList: TodoList): Promise<TodoList> {
     const persistenceModel = TodoListMapper.toPersistence(todoList);
     const newEntity = await this.todoListRepository.save(persistenceModel);
     return TodoListMapper.toDomain(newEntity);
   }
 
-  async update(
-    updateTodoListParams: IUpdateTodoListParams,
-  ): Promise<TodoList> {}
+  async update(updateTodoListParams: IUpdateTodoListParams): Promise<TodoList> {
+    if (!updateTodoListParams) {
+      throw new Error('id is Required');
+    }
+
+    const todoList = await this.findById(updateTodoListParams.id);
+    todoList.title = updateTodoListParams.title;
+    todoList.description = updateTodoListParams.description;
+
+    return await this.save(todoList);
+  }
 }
