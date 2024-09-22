@@ -26,13 +26,17 @@ export class OrmWriteTodoListRepository implements WriteTodoListRepository {
   }
 
   async update(updateTodoListParams: IUpdateTodoListParams): Promise<TodoList> {
-    if (!updateTodoListParams) {
+    if (!updateTodoListParams?.id) {
       throw new Error('id is Required');
     }
 
     const todoList = await this.findById(updateTodoListParams.id);
-    todoList.title = updateTodoListParams.title;
-    todoList.description = updateTodoListParams.description;
+    if (updateTodoListParams?.title) {
+      todoList.title = updateTodoListParams.title;
+    }
+    if (updateTodoListParams.description) {
+      todoList.description = updateTodoListParams.description;
+    }
 
     return await this.save(todoList);
   }
