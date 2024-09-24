@@ -20,7 +20,7 @@ export class AppService implements OnModuleInit {
     return await firstValueFrom(
       this.client.send(
         'create_user',
-        // must contain register command creator
+        // todo: must contain register command creator
       ),
     );
   }
@@ -29,7 +29,7 @@ export class AppService implements OnModuleInit {
     return await firstValueFrom(
       this.client.send(
         'create_user',
-        // must contain login command creator
+        // todo: must contain login command creator
       ),
     );
   }

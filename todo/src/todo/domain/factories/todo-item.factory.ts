@@ -7,12 +7,12 @@ import { TodoList } from '../todo-list';
 
 @Injectable()
 export class TodoItemFactory {
-  constructor(
+  create(
     title: string,
     description: string,
     priority: string,
     estimatedTime: number,
-  ) {
+  ): TodoItem {
     const id = randomUUID();
     const todoItemPriority = new TodoItemPriority(
       priority as TodoItemPriority['value'],

@@ -1,14 +1,25 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { CreateTodoListCommand } from 'src/todo/application/commands/create-todo-list.command';
 import { TodoService } from '../../application/todo.service';
 import { CreateTodoListDto } from './dto/create-todo-list.dto';
-import { CreateTodoListCommand } from 'src/todo/application/commands/create-todo-list.command';
+import { CreateTodoItemDto } from './dto/create-todo-item.dto';
+import { UpdateTodoListDto } from './dto/update-todo-list.dto';
+import { UpdateTodoItemDto } from './dto/udpate-todo-item.dto';
 
 @Controller('todo')
 export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
   @Post('list')
-  createTodo(@Body() createTodoListDto: CreateTodoListDto) {
+  createTodoList(@Body() createTodoListDto: CreateTodoListDto) {
     return this.todoService.createTodoList(
       new CreateTodoListCommand(
         createTodoListDto.title,
@@ -16,5 +27,46 @@ export class TodoController {
         createTodoListDto.userId,
       ),
     );
+  }
+
+  @Post('item')
+  createTodoItem(@Body() createTodoItemDto: CreateTodoItemDto) {
+    return null;
+  }
+
+  @Get('list/:id')
+  getTodoList(@Param('id') id: string) {
+    return null;
+  }
+
+  @Get('item/:id')
+  getTodoItem(@Param('id') id: string) {
+    return null;
+  }
+
+  @Delete('list/:id')
+  deleteTodoList(@Param('id') id: string) {
+    return null;
+  }
+
+  @Delete('item/:id')
+  deleteTodoItem(@Param('id') id: string) {
+    return null;
+  }
+
+  @Patch('list/:id')
+  updateTodoList(
+    @Param('id') id: string,
+    @Body() updateTodoListDto: UpdateTodoListDto,
+  ) {
+    return null;
+  }
+
+  @Patch('item/:id')
+  updateTodoItem(
+    @Param('id') id: string,
+    @Body() updateTodoItemDto: UpdateTodoItemDto,
+  ) {
+    return null;
   }
 }

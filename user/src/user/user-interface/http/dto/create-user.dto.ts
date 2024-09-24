@@ -1,5 +1,5 @@
 export class CreateUserDto {
-  // we should add validation here
+  // todo: we should add validation here
 
   firstname: string;
   lastname: string;

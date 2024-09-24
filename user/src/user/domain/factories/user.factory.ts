@@ -20,7 +20,7 @@ export class UserFactory {
       activationState as UserActivationState['value'],
     );
 
-    // maybe we should validate inputs here. and maybe not!
+    // todo: maybe we should validate inputs here. and maybe not!
 
     return new User(
       userId,
