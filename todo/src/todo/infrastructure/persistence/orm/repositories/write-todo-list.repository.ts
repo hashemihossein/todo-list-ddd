@@ -5,7 +5,6 @@ import { TodoList } from 'src/todo/domain/todo-list';
 import { TodoListEntity } from '../entities/todo-list.entity';
 import { Repository } from 'typeorm';
 import { TodoListMapper } from '../mappers/todo-list.mapper';
-import { IUpdateTodoListParams } from 'src/todo/application/ports/todo-list/interfaces/update-todo-list-params.interface';
 
 @Injectable()
 export class OrmWriteTodoListRepository implements WriteTodoListRepository {
@@ -25,19 +24,7 @@ export class OrmWriteTodoListRepository implements WriteTodoListRepository {
     return TodoListMapper.toDomain(newEntity);
   }
 
-  async update(updateTodoListParams: IUpdateTodoListParams): Promise<TodoList> {
-    if (!updateTodoListParams?.id) {
-      throw new Error('id is Required');
-    }
-
-    const todoList = await this.findById(updateTodoListParams.id);
-    if (updateTodoListParams?.title) {
-      todoList.title = updateTodoListParams.title;
-    }
-    if (updateTodoListParams.description) {
-      todoList.description = updateTodoListParams.description;
-    }
-
+  async update(todoList: TodoList): Promise<TodoList> {
     return await this.save(todoList);
   }
 }

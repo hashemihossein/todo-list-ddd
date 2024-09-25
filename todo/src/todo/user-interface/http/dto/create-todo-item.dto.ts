@@ -21,6 +21,9 @@ export class CreateTodoItemDto {
   @Max(600)
   description: string;
 
+  @IsString()
+  listId: string;
+
   @IsEnum(Priority)
   priority: Priority;
 

@@ -16,6 +16,7 @@ export class CreateTodoItemCommandHandler
     const todoItem = this.todoItemFactory.create(
       command.title,
       command.description,
+      command.listId,
       command.priority,
       command.estimatedTime,
     );

@@ -10,6 +10,7 @@ export class TodoItemFactory {
   create(
     title: string,
     description: string,
+    listId: string,
     priority: string,
     estimatedTime: number,
   ): TodoItem {
@@ -23,6 +24,7 @@ export class TodoItemFactory {
       id,
       title,
       description,
+      listId,
       todoItemPriority,
       todoItemState,
       estimatedTime,

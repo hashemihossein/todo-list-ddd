@@ -14,7 +14,6 @@ export class CreateTodoListCommandHandler
     private readonly todoListFactory: TodoListFactory,
   ) {}
   async execute(command: CreateTodoListCommand): Promise<TodoList> {
-    const id = randomUUID();
     const todoList = this.todoListFactory.create(
       command.title,
       command.description,

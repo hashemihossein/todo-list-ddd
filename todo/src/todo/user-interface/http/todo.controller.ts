@@ -13,6 +13,7 @@ import { CreateTodoListDto } from './dto/create-todo-list.dto';
 import { CreateTodoItemDto } from './dto/create-todo-item.dto';
 import { UpdateTodoListDto } from './dto/update-todo-list.dto';
 import { UpdateTodoItemDto } from './dto/udpate-todo-item.dto';
+import { CreateTodoItemCommand } from 'src/todo/application/commands/create-todo-item.command';
 
 @Controller('todo')
 export class TodoController {
@@ -31,7 +32,16 @@ export class TodoController {
 
   @Post('item')
   createTodoItem(@Body() createTodoItemDto: CreateTodoItemDto) {
-    return null;
+    return this.todoService.createTodoItem(
+      new CreateTodoItemCommand(
+        createTodoItemDto.title,
+        createTodoItemDto.description,
+        createTodoItemDto.listId,
+        createTodoItemDto.priority,
+        createTodoItemDto.state,
+        createTodoItemDto.estimatedTime,
+      ),
+    );
   }
 
   @Get('list/:id')
