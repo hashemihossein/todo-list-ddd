@@ -6,5 +6,6 @@ export class UpdateTodoItemCommand {
     public readonly priority?: string,
     public readonly state?: string,
     public readonly estimatedTime?: number,
+    public readonly loggedTime?: number,
   ) {}
 }

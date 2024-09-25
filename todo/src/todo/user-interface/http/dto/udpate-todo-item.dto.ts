@@ -6,5 +6,5 @@ export class UpdateTodoItemDto extends PartialType(CreateTodoItemDto) {
   @IsOptional()
   @IsNumber()
   @Min(1)
-  loggedTime: number;
+  loggedTime?: number;
 }

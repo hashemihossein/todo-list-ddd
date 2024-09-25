@@ -14,6 +14,8 @@ import { CreateTodoItemDto } from './dto/create-todo-item.dto';
 import { UpdateTodoListDto } from './dto/update-todo-list.dto';
 import { UpdateTodoItemDto } from './dto/udpate-todo-item.dto';
 import { CreateTodoItemCommand } from 'src/todo/application/commands/create-todo-item.command';
+import { UpdateTodoListCommand } from 'src/todo/application/commands/udpate-todo-list.command';
+import { UpdateTodoItemCommand } from 'src/todo/application/commands/udpate-todo-item.command';
 
 @Controller('todo')
 export class TodoController {
@@ -69,7 +71,13 @@ export class TodoController {
     @Param('id') id: string,
     @Body() updateTodoListDto: UpdateTodoListDto,
   ) {
-    return null;
+    return this.todoService.updateTodoList(
+      new UpdateTodoListCommand(
+        id,
+        updateTodoListDto.title,
+        updateTodoListDto.description,
+      ),
+    );
   }
 
   @Patch('item/:id')
@@ -77,6 +85,16 @@ export class TodoController {
     @Param('id') id: string,
     @Body() updateTodoItemDto: UpdateTodoItemDto,
   ) {
-    return null;
+    return this.todoService.updateTodoItem(
+      new UpdateTodoItemCommand(
+        id,
+        updateTodoItemDto.title,
+        updateTodoItemDto.description,
+        updateTodoItemDto.priority,
+        updateTodoItemDto.state,
+        updateTodoItemDto.estimatedTime,
+        updateTodoItemDto.loggedTime,
+      ),
+    );
   }
 }

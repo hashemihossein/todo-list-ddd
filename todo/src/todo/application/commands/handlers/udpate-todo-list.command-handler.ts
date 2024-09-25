@@ -10,7 +10,6 @@ export class UpdateTodoListCommandHandler
     private readonly writeTodoListRepository: WriteTodoListRepository,
   ) {}
   async execute(command: UpdateTodoListCommand): Promise<any> {
-    //todo: managing logic in this section or service of domain.
     return await this.writeTodoListRepository.update(command);
   }
 }
