@@ -5,4 +5,5 @@ export abstract class WriteTodoListRepository {
   abstract update(
     updateTodoListParams: Pick<TodoList, 'id'> & Partial<TodoList>,
   ): Promise<TodoList>;
+  abstract delete(id: string): Promise<TodoList>;
 }

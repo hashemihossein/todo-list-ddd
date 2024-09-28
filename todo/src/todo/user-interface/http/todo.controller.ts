@@ -16,6 +16,8 @@ import { UpdateTodoItemDto } from './dto/udpate-todo-item.dto';
 import { CreateTodoItemCommand } from 'src/todo/application/commands/create-todo-item.command';
 import { UpdateTodoListCommand } from 'src/todo/application/commands/udpate-todo-list.command';
 import { UpdateTodoItemCommand } from 'src/todo/application/commands/udpate-todo-item.command';
+import { DeleteTodoListCommand } from 'src/todo/application/commands/delete-todo-list.command';
+import { DeleteTodoItemCommand } from 'src/todo/application/commands/delete-todo-item.command';
 
 @Controller('todo')
 export class TodoController {
@@ -58,12 +60,12 @@ export class TodoController {
 
   @Delete('list/:id')
   deleteTodoList(@Param('id') id: string) {
-    return null;
+    return this.todoService.deleteTodoList(new DeleteTodoListCommand(id));
   }
 
   @Delete('item/:id')
   deleteTodoItem(@Param('id') id: string) {
-    return null;
+    return this.todoService.deleteTodoItem(new DeleteTodoItemCommand(id));
   }
 
   @Patch('list/:id')

@@ -4,6 +4,8 @@ import { CreateTodoListCommand } from './commands/create-todo-list.command';
 import { CreateTodoItemCommand } from './commands/create-todo-item.command';
 import { UpdateTodoListCommand } from './commands/udpate-todo-list.command';
 import { UpdateTodoItemCommand } from './commands/udpate-todo-item.command';
+import { DeleteTodoListCommand } from './commands/delete-todo-list.command';
+import { DeleteTodoItemCommand } from './commands/delete-todo-item.command';
 
 @Injectable()
 export class TodoService {
@@ -13,15 +15,23 @@ export class TodoService {
     this.commandBus.execute(createTodoListCommand);
   }
 
-  createTodoItem(createTodoItem: CreateTodoItemCommand) {
-    this.commandBus.execute(createTodoItem);
+  createTodoItem(createTodoItemCommand: CreateTodoItemCommand) {
+    this.commandBus.execute(createTodoItemCommand);
   }
 
-  updateTodoList(updateTodoList: UpdateTodoListCommand) {
-    this.commandBus.execute(updateTodoList);
+  updateTodoList(updateTodoListCommand: UpdateTodoListCommand) {
+    this.commandBus.execute(updateTodoListCommand);
   }
 
-  updateTodoItem(updateTodoItem: UpdateTodoItemCommand) {
-    this.commandBus.execute(updateTodoItem);
+  updateTodoItem(updateTodoItemCommand: UpdateTodoItemCommand) {
+    this.commandBus.execute(updateTodoItemCommand);
+  }
+
+  deleteTodoList(deleteTodoListCommand: DeleteTodoListCommand) {
+    this.commandBus.execute(deleteTodoListCommand);
+  }
+
+  deleteTodoItem(deleteTodoItemCommand: DeleteTodoItemCommand) {
+    this.commandBus.execute(deleteTodoItemCommand);
   }
 }

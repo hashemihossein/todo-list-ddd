@@ -27,4 +27,15 @@ export class OrmWriteTodoListRepository implements WriteTodoListRepository {
   async update(todoList: TodoList): Promise<TodoList> {
     return await this.save(todoList);
   }
+
+  async delete(id: string): Promise<TodoList> {
+    const todoList = this.findById(id);
+
+    if (!todoList) {
+      throw new Error(`todo-list with id: ${id} is unavailable`);
+    }
+
+    await this.todoListRepository.delete(id);
+    return todoList;
+  }
 }
