@@ -11,18 +11,16 @@ export class TodoList {
     public userId: string,
   ) {}
 
-  public update(value: UpdateTodoListCommand): TodoList {
+  public update(value: UpdateTodoListCommand): void {
     if (value?.title) {
       this.title = value.title;
     }
     if (value?.description) {
       this.description = value.description;
     }
-    return this;
   }
 
-  public addTodoItem(todoItem: TodoItem): TodoList {
+  public addTodoItem(todoItem: TodoItem): void {
     this.items.push(todoItem);
-    return this;
   }
 }

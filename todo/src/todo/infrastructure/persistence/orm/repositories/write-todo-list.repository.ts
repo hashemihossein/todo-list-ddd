@@ -13,7 +13,7 @@ export class OrmWriteTodoListRepository implements WriteTodoListRepository {
     private readonly todoListRepository: Repository<TodoListEntity>,
   ) {}
 
-  private async findById(id: string): Promise<TodoList> {
+  async findOne(id: string): Promise<TodoList> {
     const todoList = await this.todoListRepository.findOne({ where: { id } });
     return TodoListMapper.toDomain(todoList);
   }
@@ -29,11 +29,7 @@ export class OrmWriteTodoListRepository implements WriteTodoListRepository {
   }
 
   async delete(id: string): Promise<TodoList> {
-    const todoList = this.findById(id);
-
-    if (!todoList) {
-      throw new Error(`todo-list with id: ${id} is unavailable`);
-    }
+    const todoList = await this.findOne(id);
 
     await this.todoListRepository.delete(id);
     return todoList;

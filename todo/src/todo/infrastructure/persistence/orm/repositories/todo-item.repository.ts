@@ -38,9 +38,6 @@ export class OrmTodoItemRepository implements TodoItemRepository {
 
   async delete(id: string): Promise<TodoItem> {
     const todoItem = await this.findOne(id);
-    if (!todoItem) {
-      throw new Error(`item with id ${id} is unavailable`);
-    }
 
     await this.todoItemRepository.delete(id);
     return todoItem;

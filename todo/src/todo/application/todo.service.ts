@@ -11,27 +11,39 @@ import { DeleteTodoItemCommand } from './commands/delete-todo-item.command';
 export class TodoService {
   constructor(private readonly commandBus: CommandBus) {}
   // todo: functions output type
-  createTodoList(createTodoListCommand: CreateTodoListCommand) {
-    this.commandBus.execute(createTodoListCommand);
+  async createTodoList(
+    createTodoListCommand: CreateTodoListCommand,
+  ): Promise<any> {
+    await this.commandBus.execute(createTodoListCommand);
   }
 
-  createTodoItem(createTodoItemCommand: CreateTodoItemCommand) {
-    this.commandBus.execute(createTodoItemCommand);
+  async createTodoItem(
+    createTodoItemCommand: CreateTodoItemCommand,
+  ): Promise<any> {
+    await this.commandBus.execute(createTodoItemCommand);
   }
 
-  updateTodoList(updateTodoListCommand: UpdateTodoListCommand) {
-    this.commandBus.execute(updateTodoListCommand);
+  async updateTodoList(
+    updateTodoListCommand: UpdateTodoListCommand,
+  ): Promise<any> {
+    await this.commandBus.execute(updateTodoListCommand);
   }
 
-  updateTodoItem(updateTodoItemCommand: UpdateTodoItemCommand) {
-    this.commandBus.execute(updateTodoItemCommand);
+  async updateTodoItem(
+    updateTodoItemCommand: UpdateTodoItemCommand,
+  ): Promise<any> {
+    await this.commandBus.execute(updateTodoItemCommand);
   }
 
-  deleteTodoList(deleteTodoListCommand: DeleteTodoListCommand) {
-    this.commandBus.execute(deleteTodoListCommand);
+  async deleteTodoList(
+    deleteTodoListCommand: DeleteTodoListCommand,
+  ): Promise<any> {
+    await this.commandBus.execute(deleteTodoListCommand);
   }
 
-  deleteTodoItem(deleteTodoItemCommand: DeleteTodoItemCommand) {
-    this.commandBus.execute(deleteTodoItemCommand);
+  async deleteTodoItem(
+    deleteTodoItemCommand: DeleteTodoItemCommand,
+  ): Promise<any> {
+    await this.commandBus.execute(deleteTodoItemCommand);
   }
 }

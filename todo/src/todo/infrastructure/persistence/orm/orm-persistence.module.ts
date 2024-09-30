@@ -6,9 +6,20 @@ import { TodoItemRepository } from 'src/todo/application/ports/todo-item/todo-it
 import { WriteTodoListRepository } from 'src/todo/application/ports/todo-list/write-todo-list.repository';
 import { OrmWriteTodoListRepository } from './repositories/write-todo-list.repository';
 import { OrmTodoItemRepository } from './repositories/todo-item.repository';
-
+import { MongooseModule } from '@nestjs/mongoose';
+import {
+  ReadTodoList,
+  ReadTodoListSchema,
+} from './schemas/read-todo-list.schema';
+import { ReadTodoListRepository } from 'src/todo/application/ports/todo-list/read-todo-list.repository';
+import { OrmReadTodoListRepository } from './repositories/read-todo-list.repository';
 @Module({
-  imports: [TypeOrmModule.forFeature([TodoListEntity, TodoItemEntity])],
+  imports: [
+    TypeOrmModule.forFeature([TodoListEntity, TodoItemEntity]),
+    MongooseModule.forFeature([
+      { name: ReadTodoList.name, schema: ReadTodoListSchema },
+    ]),
+  ],
   providers: [
     {
       provide: WriteTodoListRepository,
@@ -18,7 +29,15 @@ import { OrmTodoItemRepository } from './repositories/todo-item.repository';
       provide: TodoItemRepository,
       useClass: OrmTodoItemRepository,
     },
+    {
+      provide: ReadTodoListRepository,
+      useClass: OrmReadTodoListRepository,
+    },
   ],
-  exports: [WriteTodoListRepository, TodoItemRepository],
+  exports: [
+    WriteTodoListRepository,
+    TodoItemRepository,
+    ReadTodoListRepository,
+  ],
 })
 export class AppModule {}

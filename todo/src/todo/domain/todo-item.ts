@@ -15,7 +15,7 @@ export class TodoItem {
     public loggedTime: number,
   ) {}
 
-  public update(value: UpdateTodoItemCommand): TodoItem {
+  public update(value: UpdateTodoItemCommand): void {
     if (value?.title) {
       this.title = value.title;
     }
@@ -38,7 +38,5 @@ export class TodoItem {
     if (value?.loggedTime) {
       this.loggedTime = value.loggedTime;
     }
-
-    return this;
   }
 }

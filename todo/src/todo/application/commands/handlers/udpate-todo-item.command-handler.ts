@@ -10,12 +10,12 @@ export class UpdateTodoItemCommandHandler
   constructor(private readonly todoItemRepository: TodoItemRepository) {}
   async execute(command: UpdateTodoItemCommand): Promise<TodoItem> {
     const todoItem = await this.todoItemRepository.findOne(command.id);
+
     if (!todoItem) {
       throw new Error(`todo item with id of ${command.id} is unavailable`);
     }
 
     todoItem.update(command);
-
     return await this.todoItemRepository.update(todoItem);
   }
 }
