@@ -14,6 +14,7 @@ export class TodoItemMapper {
       todoItem.id,
       todoItem.title,
       todoItem.description,
+      todoItem.listId.id,
       priority,
       state,
       todoItem.estimatedTime,

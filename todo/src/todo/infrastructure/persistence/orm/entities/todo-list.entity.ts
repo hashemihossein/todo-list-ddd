@@ -12,7 +12,7 @@ export class TodoListEntity {
   @Column()
   description: string;
 
-  @OneToMany(() => TodoItemEntity, (item) => item.todoList)
+  @OneToMany(() => TodoItemEntity, (item) => item.listId)
   items: TodoItemEntity[];
 
   @Column('uuid')

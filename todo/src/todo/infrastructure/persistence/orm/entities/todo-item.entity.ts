@@ -13,7 +13,7 @@ export class TodoItemEntity {
   description: string;
 
   @OneToOne(() => TodoListEntity)
-  todoList: TodoItemEntity;
+  listId: TodoListEntity;
 
   @Column()
   priority: string;

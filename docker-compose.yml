@@ -44,7 +44,7 @@ services:
       - local-kafka
 
   user-service:
-    build: ./user-service # Dockerfile for the user service
+    build: ./user # Dockerfile for the user service
     container_name: user_service
     depends_on:
       - user_postgres
@@ -60,7 +60,7 @@ services:
       - "3001:3001"
 
   auth-service:
-    build: ./auth-service # Dockerfile for the auth service
+    build: ./auth # Dockerfile for the auth service
     container_name: auth_service
     ports:
       - "3002:3002"
