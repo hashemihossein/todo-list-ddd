@@ -13,6 +13,7 @@ import {
 } from './schemas/read-todo-list.schema';
 import { ReadTodoListRepository } from 'src/todo/application/ports/todo-list/read-todo-list.repository';
 import { OrmReadTodoListRepository } from './repositories/read-todo-list.repository';
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([TodoListEntity, TodoItemEntity]),
@@ -40,4 +41,4 @@ import { OrmReadTodoListRepository } from './repositories/read-todo-list.reposit
     ReadTodoListRepository,
   ],
 })
-export class AppModule {}
+export class OrmPersistenceModule {}

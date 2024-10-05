@@ -1,7 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CreateTodoListCommand } from '../create-todo-list.command';
 import { TodoList } from 'src/todo/domain/todo-list';
-import { randomUUID } from 'crypto';
 import { WriteTodoListRepository } from '../../ports/todo-list/write-todo-list.repository';
 import { TodoListFactory } from 'src/todo/domain/factories/todo-list.factory';
 

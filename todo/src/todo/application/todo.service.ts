@@ -11,6 +11,7 @@ import { DeleteTodoItemCommand } from './commands/delete-todo-item.command';
 export class TodoService {
   constructor(private readonly commandBus: CommandBus) {}
   // todo: functions output type
+
   async createTodoList(
     createTodoListCommand: CreateTodoListCommand,
   ): Promise<any> {
