@@ -8,15 +8,17 @@ import { TodoItemEntity } from './todo/infrastructure/persistence/orm/entities/t
 @Module({
   imports: [
     TodoModule,
-    MongooseModule.forRoot('mongodb://localhost:27019/'),
+    MongooseModule.forRoot(
+      `mongodb://${process.env.MONGO_HOST || 'todo_mongo'}:27017/${process.env.MONGO_DB || 'todo_read_db'}`,
+    ),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5434,
-      username: 'youruser',
-      password: 'yourpassword',
-      database: 'todo_write_db',
-      entities: [TodoListEntity, TodoItemEntity],
+      host: process.env.POSTGRES_HOST || 'todo_postgres',
+      port: 5432,
+      username: process.env.POSTGRES_USER || 'youruser',
+      password: process.env.POSTGRES_PASSWORD || 'yourpassword',
+      database: process.env.POSTGRES_DB || 'todo_write_db',
+      autoLoadEntities: true,
       synchronize: true,
     }),
   ],

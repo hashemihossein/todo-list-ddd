@@ -5,11 +5,19 @@ import { CommandBus, CqrsModule, QueryBus } from '@nestjs/cqrs';
 import { CreateTodoListCommandHandler } from './commands/handlers/create-todo-list.command-handler';
 import { TodoListFactory } from '../domain/factories/todo-list.factory';
 import { OrmPersistenceModule } from '../infrastructure/persistence/orm/orm-persistence.module';
+import { TodoListCreatedEventHandler } from './event-handlers/todo-list-created.event-handler';
+import { TodoListReadModelFactory } from '../domain/factories/todo-list-read-model.factory';
 
 @Module({
   imports: [CqrsModule, OrmPersistenceModule],
   controllers: [TodoController],
-  providers: [TodoService, CreateTodoListCommandHandler, TodoListFactory],
+  providers: [
+    TodoService,
+    CreateTodoListCommandHandler,
+    TodoListFactory,
+    TodoListReadModelFactory,
+    TodoListCreatedEventHandler,
+  ],
   exports: [TodoModule],
 })
 export class TodoModule {}

@@ -6,6 +6,8 @@ import { UpdateTodoListCommand } from './commands/udpate-todo-list.command';
 import { UpdateTodoItemCommand } from './commands/udpate-todo-item.command';
 import { DeleteTodoListCommand } from './commands/delete-todo-list.command';
 import { DeleteTodoItemCommand } from './commands/delete-todo-item.command';
+import { TodoList } from '../domain/todo-list';
+import { TodoItem } from '../domain/todo-item';
 
 @Injectable()
 export class TodoService {
@@ -14,37 +16,37 @@ export class TodoService {
 
   async createTodoList(
     createTodoListCommand: CreateTodoListCommand,
-  ): Promise<any> {
-    await this.commandBus.execute(createTodoListCommand);
+  ): Promise<TodoList> {
+    return await this.commandBus.execute(createTodoListCommand);
   }
 
   async createTodoItem(
     createTodoItemCommand: CreateTodoItemCommand,
-  ): Promise<any> {
-    await this.commandBus.execute(createTodoItemCommand);
+  ): Promise<TodoItem> {
+    return await this.commandBus.execute(createTodoItemCommand);
   }
 
   async updateTodoList(
     updateTodoListCommand: UpdateTodoListCommand,
-  ): Promise<any> {
-    await this.commandBus.execute(updateTodoListCommand);
+  ): Promise<TodoList> {
+    return await this.commandBus.execute(updateTodoListCommand);
   }
 
   async updateTodoItem(
     updateTodoItemCommand: UpdateTodoItemCommand,
-  ): Promise<any> {
-    await this.commandBus.execute(updateTodoItemCommand);
+  ): Promise<TodoItem> {
+    return await this.commandBus.execute(updateTodoItemCommand);
   }
 
   async deleteTodoList(
     deleteTodoListCommand: DeleteTodoListCommand,
-  ): Promise<any> {
-    await this.commandBus.execute(deleteTodoListCommand);
+  ): Promise<TodoList> {
+    return await this.commandBus.execute(deleteTodoListCommand);
   }
 
   async deleteTodoItem(
     deleteTodoItemCommand: DeleteTodoItemCommand,
-  ): Promise<any> {
-    await this.commandBus.execute(deleteTodoItemCommand);
+  ): Promise<TodoItem> {
+    return await this.commandBus.execute(deleteTodoItemCommand);
   }
 }
