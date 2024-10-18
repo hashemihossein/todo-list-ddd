@@ -4,10 +4,15 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TodoListEntity } from './todo/infrastructure/persistence/orm/entities/todo-list.entity';
 import { TodoItemEntity } from './todo/infrastructure/persistence/orm/entities/todo-item.entity';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     TodoModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
     MongooseModule.forRoot(
       `mongodb://${process.env.MONGO_HOST || 'todo_mongo'}:27017/${process.env.MONGO_DB || 'todo_read_db'}`,
     ),

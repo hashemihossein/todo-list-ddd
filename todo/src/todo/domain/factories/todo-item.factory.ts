@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto';
 import { TodoItemPriority } from '../value-objects/todo-item-priority';
 import { TodoItemState } from '../value-objects/todo-item-state';
 import { TodoItem } from '../todo-item';
-import { TodoList } from '../todo-list';
+import { TodoItemCreatedEvent } from '../events/todo-item/todo-item-created.event';
 
 @Injectable()
 export class TodoItemFactory {
@@ -20,7 +20,7 @@ export class TodoItemFactory {
     );
     const todoItemState = new TodoItemState('todo');
 
-    return new TodoItem(
+    const todoItem = new TodoItem(
       id,
       title,
       description,
@@ -30,5 +30,9 @@ export class TodoItemFactory {
       estimatedTime,
       0,
     );
+
+    todoItem.apply(new TodoItemCreatedEvent(todoItem));
+
+    return todoItem;
   }
 }

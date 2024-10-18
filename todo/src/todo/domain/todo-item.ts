@@ -1,9 +1,10 @@
+import { AggregateRoot } from '@nestjs/cqrs';
 import { UpdateTodoItemCommand } from '../application/commands/udpate-todo-item.command';
 import { TodoList } from './todo-list';
 import { TodoItemPriority } from './value-objects/todo-item-priority';
 import { TodoItemState } from './value-objects/todo-item-state';
 
-export class TodoItem {
+export class TodoItem extends AggregateRoot {
   constructor(
     public id: string,
     public title: string,
@@ -13,7 +14,9 @@ export class TodoItem {
     public state: TodoItemState,
     public estimatedTime: number,
     public loggedTime: number,
-  ) {}
+  ) {
+    super();
+  }
 
   public update(value: UpdateTodoItemCommand): void {
     if (value?.title) {
