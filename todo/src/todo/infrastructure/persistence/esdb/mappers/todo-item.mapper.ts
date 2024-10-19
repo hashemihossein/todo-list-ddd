@@ -1,22 +1,10 @@
-import { jsonEvent, MetadataType } from '@eventstore/db-client';
-import { randomUUID } from 'crypto';
-import { TodoItemEvent } from 'src/todo/domain/events/todo-item';
-
-type esdbEventTypes = {
-  id: string;
-  contentType: 'application/octet-stream';
-  type: string;
-  data: any;
-  metadata: MetadataType;
-};
+import { jsonEvent } from '@eventstore/db-client';
+import { EventBaseType } from 'src/todo/domain/events/event-base';
+import { ESDBEventsType } from '../types/esdb-events-type';
 
 export class TodoItemEventMapper {
-  static toPersistence(event: TodoItemEvent): esdbEventTypes {
-    const mappedEvent = jsonEvent({
-      id: randomUUID(),
-      type: 'todo-item',
-      data: JSON.parse(JSON.stringify(event)),
-    });
+  static toPersistence(event: EventBaseType): ESDBEventsType {
+    const mappedEvent = jsonEvent(event);
     return mappedEvent;
   }
 }

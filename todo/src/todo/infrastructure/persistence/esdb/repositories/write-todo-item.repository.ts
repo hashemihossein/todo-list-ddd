@@ -9,7 +9,6 @@ import { WriteTodoitemRepository } from 'src/todo/application/ports/todo-item/wr
 import { TodoItemEvent } from 'src/todo/domain/events/todo-item';
 import { ESDBConfigService } from '../config/esdb-config.service';
 import { TodoItemEventMapper } from '../mappers/todo-item.mapper';
-import { randomUUID } from 'crypto';
 
 export class ESDBWriteTodoItemRepository extends WriteTodoitemRepository {
   private readonly client: EventStoreDBClient;
@@ -18,13 +17,16 @@ export class ESDBWriteTodoItemRepository extends WriteTodoitemRepository {
     this.client = esdbConfigService.getClient();
   }
 
-  async appendToStream(event: TodoItemEvent): Promise<void> {
+  async appendToStream(
+    event: TodoItemEvent,
+    expectedRevision: 'any' | 'no_stream' | 'stream_exists' = 'any',
+  ): Promise<void> {
     const mappedEvent = TodoItemEventMapper.toPersistence(event);
     await this.client.appendToStream(
-      `TodoItem-${mappedEvent.id}`,
+      `todoItem-${mappedEvent.data.id}`,
       mappedEvent,
       {
-        expectedRevision: ANY,
+        expectedRevision: expectedRevision,
       },
     );
   }
