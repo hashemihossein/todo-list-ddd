@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { TodoList } from '../todo-list';
 import { randomUUID } from 'crypto';
+import { TodoListCreatedEvent } from '../events/todo-list/todo-list-created.event';
 
 @Injectable()
 export class TodoListFactory {
@@ -9,6 +10,8 @@ export class TodoListFactory {
 
     const id = randomUUID();
 
-    return new TodoList(id, title, description, [], userId);
+    const todoList = new TodoList(id, title, description, [], userId);
+    todoList.apply(new TodoListCreatedEvent(todoList));
+    return todoList;
   }
 }

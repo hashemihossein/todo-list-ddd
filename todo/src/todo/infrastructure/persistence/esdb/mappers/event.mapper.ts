@@ -1,9 +1,9 @@
 import { jsonEvent } from '@eventstore/db-client';
-import { EventBaseType } from 'src/todo/domain/events/event-base';
+import { EventBase } from 'src/todo/domain/events/event-base';
 import { ESDBEventsType } from '../types/esdb-events-type';
 
-export class TodoItemEventMapper {
-  static toPersistence(event: EventBaseType): ESDBEventsType {
+export class EventMapper {
+  static toPersistence(event: EventBase): ESDBEventsType {
     const mappedEvent = jsonEvent(event);
     return mappedEvent;
   }

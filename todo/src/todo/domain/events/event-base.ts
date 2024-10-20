@@ -1,4 +1,4 @@
-export class EventBaseType {
+export class EventBase {
   id: string;
   type: string;
   data: { id: string } & Record<string, any>;

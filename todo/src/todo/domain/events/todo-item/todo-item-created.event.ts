@@ -1,8 +1,8 @@
 import { randomUUID } from 'crypto';
 import { TodoItem } from '../../todo-item';
-import { EventBaseType } from '../event-base';
+import { EventBase } from '../event-base';
 
-export class TodoItemCreatedEvent extends EventBaseType {
+export class TodoItemCreatedEvent extends EventBase {
   constructor(public readonly todoItem: TodoItem) {
     super();
     this.type = 'todo-item-created';

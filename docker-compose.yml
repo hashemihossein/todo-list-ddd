@@ -93,6 +93,7 @@ services:
     depends_on:
       - todo_postgres
       - todo_mongo
+      - eventstore
     environment:
       - POSTGRES_HOST=todo_postgres
       - POSTGRES_DB=todo_write_db

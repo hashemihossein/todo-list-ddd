@@ -1,8 +1,10 @@
 import {
   EventStoreDBClient,
+  FORWARDS,
   JSONEventType,
   PersistentSubscriptionToStream,
   persistentSubscriptionToStreamSettingsFromDefaults,
+  START,
 } from '@eventstore/db-client';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -11,7 +13,7 @@ import { RedisService } from 'src/todo/infrastructure/in-memory/redis/redis.serv
 @Injectable()
 export class ESDBConfigService {
   private client: EventStoreDBClient;
-  private connectionString = `esdb+discover://admin:${this.configService.get<string>('EVENTSTORE_USER')}:${this.configService.get<string>('EVENTSTORE_PASSWORD')}@cluster.dns.name:${this.configService.get<number>('EVENTSTORE_PORT')}`;
+  private connectionString = `esdb://eventstore:2113?tls=false`;
   private readonly logger = new Logger(ESDBConfigService.name);
   private reconnecting = false;
 
@@ -19,10 +21,7 @@ export class ESDBConfigService {
     private readonly configService: ConfigService,
     private readonly redisService: RedisService,
   ) {
-    this.client = new EventStoreDBClient(
-      { endpoint: 'localhost:2113' },
-      { insecure: true },
-    );
+    this._connect();
   }
 
   async onModuleInit() {
