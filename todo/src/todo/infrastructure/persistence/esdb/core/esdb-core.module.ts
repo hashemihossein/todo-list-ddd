@@ -4,4 +4,4 @@ import { RedisModule } from 'src/todo/infrastructure/in-memory/redis/redis.modul
 @Module({
   imports: [RedisModule],
 })
-export class ESDBConfigModule {}
+export class ESDBCoreModule {}

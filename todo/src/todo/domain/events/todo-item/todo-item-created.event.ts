@@ -8,5 +8,6 @@ export class TodoItemCreatedEvent extends EventBase {
     this.type = 'todo-item-created';
     this.data = todoItem;
     this.id = randomUUID();
+    this.metadata = { streamPrefix: 'TodoItem' };
   }
 }

@@ -94,6 +94,7 @@ services:
       - todo_postgres
       - todo_mongo
       - eventstore
+      - redis
     environment:
       - POSTGRES_HOST=todo_postgres
       - POSTGRES_DB=todo_write_db

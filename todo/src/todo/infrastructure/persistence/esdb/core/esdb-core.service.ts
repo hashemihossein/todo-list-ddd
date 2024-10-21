@@ -11,10 +11,10 @@ import { ConfigService } from '@nestjs/config';
 import { RedisService } from 'src/todo/infrastructure/in-memory/redis/redis.service';
 
 @Injectable()
-export class ESDBConfigService {
+export class ESDBCoreService {
   private client: EventStoreDBClient;
   private connectionString = `esdb://eventstore:2113?tls=false`;
-  private readonly logger = new Logger(ESDBConfigService.name);
+  private readonly logger = new Logger(ESDBCoreService.name);
   private reconnecting = false;
 
   constructor(
@@ -34,38 +34,6 @@ export class ESDBConfigService {
     return this.client;
   }
 
-  private async _connect() {
-    this.client = EventStoreDBClient.connectionString(this.connectionString);
-  }
-
-  private async _getSubscriptionGroupName(streamName: string): Promise<string> {
-    try {
-      let groupName = await this.redisService.get(`${streamName}-sub-name`);
-      if (!groupName) {
-        await this.client.createPersistentSubscriptionToStream(
-          streamName,
-          `PersistentSubscriptionTo${streamName}Stream`,
-          persistentSubscriptionToStreamSettingsFromDefaults(),
-          {
-            credentials: {
-              username: this.configService.get<string>('EVENTSTORE_USER'),
-              password: this.configService.get<string>('EVENTSTORE_PASSWORD'),
-            },
-          },
-        );
-        groupName = `PersistentSubscriptionTo${streamName}Stream`;
-        await this.redisService.set(
-          `${streamName}-sub-name`,
-          `PersistentSubscriptionTo${streamName}Stream`,
-        );
-      }
-      return groupName;
-    } catch (error) {
-      this.logger.error(error);
-      throw new Error(`error while getting subscribing group name: ${error}`);
-    }
-  }
-
   async connectToPersistentSubscription(
     streamName: string,
   ): Promise<PersistentSubscriptionToStream> {
@@ -80,6 +48,32 @@ export class ESDBConfigService {
     } catch (error) {
       this.logger.error(error);
       throw new Error(`error while subscribing to stream: ${error}`);
+    }
+  }
+
+  private async _connect() {
+    this.client = EventStoreDBClient.connectionString(this.connectionString);
+  }
+
+  private async _getSubscriptionGroupName(streamName: string): Promise<string> {
+    try {
+      let groupName = await this.redisService.get(`${streamName}-sub-name`);
+      if (!groupName) {
+        await this.client.createPersistentSubscriptionToStream(
+          streamName,
+          `PersistentSubscriptionTo${streamName}Stream`,
+          persistentSubscriptionToStreamSettingsFromDefaults(),
+        );
+        groupName = `PersistentSubscriptionTo${streamName}Stream`;
+        await this.redisService.set(
+          `${streamName}-sub-name`,
+          `PersistentSubscriptionTo${streamName}Stream`,
+        );
+      }
+      return groupName;
+    } catch (error) {
+      this.logger.error(error);
+      throw new Error(`error while getting subscribing group name: ${error}`);
     }
   }
 }

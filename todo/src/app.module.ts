@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 import { TodoModule } from './todo/application/todo.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TodoListEntity } from './todo/infrastructure/persistence/orm/entities/todo-list.entity';
-import { TodoItemEntity } from './todo/infrastructure/persistence/orm/entities/todo-item.entity';
 import { ConfigModule } from '@nestjs/config';
+import { ESDBModule } from './todo/infrastructure/persistence/esdb/esdb.module';
 
 @Module({
   imports: [
     TodoModule,
+    ESDBModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
