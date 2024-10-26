@@ -12,6 +12,11 @@ export class RedisConfigService {
       port: configService.get<number>('REDIS_PORT'),
       password: configService.get<string>('REDIS_PASSWORD'),
     });
+    // this.redisClient = new Redis({
+    //   host: 'localhost',
+    //   port: configService.get<number>('REDIS_PORT'),
+    //   password: configService.get<string>('REDIS_PASSWORD'),
+    // });
   }
 
   public getClient(): Redis {

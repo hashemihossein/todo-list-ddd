@@ -11,7 +11,6 @@ export class TodoListFactory {
     const id = randomUUID();
 
     const todoList = new TodoList(id, title, description, [], userId);
-    todoList.apply(new TodoListCreatedEvent(todoList));
     return todoList;
   }
 }

@@ -10,9 +10,10 @@ import { CreateTodoListCommandHandler } from './commands/handlers/create-todo-li
 import { TodoListCreatedEventHandler } from './event-handlers/todo-list-created.event-handler';
 import { TodoService } from './todo.service';
 import { ESDBSubscription } from '../presenters/subscription/esdb/esdb-subscription';
+import { PersistenceModule } from '../infrastructure/persistence/persistence.module';
 
 @Module({
-  imports: [CqrsModule, OrmPersistenceModule, ESDBModule],
+  imports: [CqrsModule, PersistenceModule],
   controllers: [TodoController, ESDBSubscription],
   providers: [
     TodoService,

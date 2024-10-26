@@ -2,8 +2,10 @@ import { AggregateRoot } from '@nestjs/cqrs';
 import { UpdateTodoListCommand } from '../application/commands/udpate-todo-list.command';
 import { TodoListFactory } from './factories/todo-list.factory';
 import { TodoItem } from './todo-item';
+import { VersionedAggregateRoot } from './aggregate-root/versioned-aggregate-root';
+import { OnModuleInit } from '@nestjs/common';
 
-export class TodoList extends AggregateRoot {
+export class TodoList extends VersionedAggregateRoot {
   constructor(
     public id: string,
     public title: string,

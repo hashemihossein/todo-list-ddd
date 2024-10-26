@@ -28,11 +28,6 @@ export class ESDBSubscription implements OnModuleInit, OnModuleDestroy {
         '$ce-TodoItem',
       );
 
-    console.log(
-      this.todoItemSubscription,
-      this.todoListSubscription,
-      'subs constants',
-    );
     this.handleSubscription(this.todoItemSubscription);
     this.handleSubscription(this.todoListSubscription);
   }
@@ -42,15 +37,12 @@ export class ESDBSubscription implements OnModuleInit, OnModuleDestroy {
       try {
         for await (const event of subscription) {
           try {
-            console.log(event, 'this is subscribed event ');
             await subscription.ack(event);
           } catch (error) {
-            console.error(`Error processing event: ${error}`);
             await subscription.nack(PARK, error.toString(), event);
           }
         }
       } catch (error) {
-        console.error(`Subscription was dropped. ${error}`);
         // Implement reconnection logic here
       }
     })();

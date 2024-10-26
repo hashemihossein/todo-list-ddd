@@ -87,23 +87,23 @@ services:
   #   volumes:
   #     - user_postgres_data:/var/lib/postgresql/data
 
-  todo-service:
-    build: ./todo # Dockerfile for the todo service
-    container_name: todo_service
-    depends_on:
-      - todo_postgres
-      - todo_mongo
-      - eventstore
-      - redis
-    environment:
-      - POSTGRES_HOST=todo_postgres
-      - POSTGRES_DB=todo_write_db
-      - POSTGRES_USER=youruser
-      - POSTGRES_PASSWORD=yourpassword
-      - MONGO_HOST=todo_mongo
-      - MONGO_DB=todo_read_db
-    ports:
-      - "3003:3003"
+  # todo-service:
+  #   build: ./todo # Dockerfile for the todo service
+  #   container_name: todo_service
+  #   depends_on:
+  #     - todo_postgres
+  #     - todo_mongo
+  #     - eventstore
+  #     - redis
+  #   environment:
+  #     - POSTGRES_HOST=todo_postgres
+  #     - POSTGRES_DB=todo_write_db
+  #     - POSTGRES_USER=youruser
+  #     - POSTGRES_PASSWORD=yourpassword
+  #     - MONGO_HOST=todo_mongo
+  #     - MONGO_DB=todo_read_db
+  #   ports:
+  #     - "3003:3003"
 
   todo_postgres:
     image: postgres:13

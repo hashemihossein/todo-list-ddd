@@ -1,8 +1,8 @@
-import { EventBase } from 'src/todo/domain/events/event-base';
+import { VersionedAggregateRoot } from 'src/todo/domain/aggregate-root/versioned-aggregate-root';
+import { SerializableEvent } from 'src/todo/domain/events/interfaces/serializable-event';
 
 export abstract class ESDBRepository {
   abstract appendToStream(
-    event: EventBase,
-    expectedRevision?: 'any' | 'no_stream' | 'stream_exists',
+    event: SerializableEvent | SerializableEvent[],
   ): Promise<boolean>;
 }

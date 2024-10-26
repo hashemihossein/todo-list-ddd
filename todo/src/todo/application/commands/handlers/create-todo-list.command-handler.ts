@@ -1,4 +1,9 @@
-import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
+import {
+  CommandHandler,
+  EventBus,
+  EventPublisher,
+  ICommandHandler,
+} from '@nestjs/cqrs';
 import { CreateTodoListCommand } from '../create-todo-list.command';
 import { TodoList } from 'src/todo/domain/todo-list';
 import { TodoListFactory } from 'src/todo/domain/factories/todo-list.factory';
@@ -11,7 +16,7 @@ export class CreateTodoListCommandHandler
 {
   constructor(
     private readonly todoListFactory: TodoListFactory,
-    private readonly esdbRepository: ESDBRepository,
+    private readonly eventPublisher: EventPublisher,
   ) {}
   async execute(command: CreateTodoListCommand): Promise<TodoList> {
     const todoList = this.todoListFactory.create(
@@ -20,9 +25,9 @@ export class CreateTodoListCommandHandler
       command.userId,
     );
 
-    const event = new TodoListCreatedEvent(todoList);
-    await this.esdbRepository.appendToStream(event);
-
+    todoList.apply(new TodoListCreatedEvent(todoList));
+    this.eventPublisher.mergeObjectContext(todoList);
+    todoList.commit();
     return todoList;
   }
 }
