@@ -13,8 +13,8 @@ import { RedisService } from 'src/todo/infrastructure/in-memory/redis/redis.serv
 @Injectable()
 export class ESDBCoreService {
   private client: EventStoreDBClient;
-  private connectionString = `esdb://eventstore:2113?tls=false`;
-  // private connectionString = `esdb://127.0.0.1:2113?tls=false`;
+  // private connectionString = `esdb://eventstore:2113?tls=false`;
+  private connectionString = `esdb://127.0.0.1:2113?tls=false`;
 
   private readonly logger = new Logger(ESDBCoreService.name);
   private reconnecting = false;
@@ -59,17 +59,22 @@ export class ESDBCoreService {
 
   private async _getSubscriptionGroupName(streamName: string): Promise<string> {
     try {
-      let groupName = await this.redisService.get(`${streamName}-sub-name`);
+      let groupName = await this.redisService.get(
+        `${streamName}-subsubscription-name`,
+      );
+      console.log(groupName);
       if (!groupName) {
         await this.client.createPersistentSubscriptionToStream(
           streamName,
-          `PersistentSubscriptionTo${streamName}Stream`,
-          persistentSubscriptionToStreamSettingsFromDefaults(),
+          `persistent-subscription-to${streamName}-stream`,
+          persistentSubscriptionToStreamSettingsFromDefaults({
+            resolveLinkTos: true,
+          }),
         );
-        groupName = `PersistentSubscriptionTo${streamName}Stream`;
+        groupName = `persistent-subscription-to${streamName}-stream`;
         await this.redisService.set(
-          `${streamName}-sub-name`,
-          `PersistentSubscriptionTo${streamName}Stream`,
+          `${streamName}-subsubscription-name`,
+          `persistent-subscription-to${streamName}-stream`,
         );
       }
       return groupName;

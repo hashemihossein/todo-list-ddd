@@ -32,11 +32,14 @@ export class ESDBSubscription implements OnModuleInit, OnModuleDestroy {
     this.handleSubscription(this.todoListSubscription);
   }
 
-  private async handleSubscription(subscription) {
+  private async handleSubscription(
+    subscription: PersistentSubscriptionToStream,
+  ) {
     (async () => {
       try {
         for await (const event of subscription) {
           try {
+            console.log(event.event.data);
             await subscription.ack(event);
           } catch (error) {
             await subscription.nack(PARK, error.toString(), event);
