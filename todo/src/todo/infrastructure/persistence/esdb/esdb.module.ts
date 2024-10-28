@@ -7,6 +7,7 @@ import { ESDBWriteRepository } from './repositories/esdb-write.repository';
 import { EventStorePublisher } from './event-publishers/event-publisher';
 import { CqrsModule, EventBus } from '@nestjs/cqrs';
 import { EventSerializer } from './serializers/event.serializer';
+import { EventDeserializer } from './deserializers/event.deserializer';
 
 @Module({
   imports: [ESDBCoreModule, RedisModule, CqrsModule],
@@ -14,12 +15,13 @@ import { EventSerializer } from './serializers/event.serializer';
     ESDBCoreService,
     EventStorePublisher,
     EventSerializer,
+    EventDeserializer,
     ESDBWriteRepository,
     {
       provide: ESDBRepository,
       useExisting: ESDBWriteRepository,
     },
   ],
-  exports: [ESDBRepository, ESDBCoreService],
+  exports: [ESDBRepository, ESDBCoreService, EventDeserializer],
 })
 export class ESDBModule {}

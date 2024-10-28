@@ -1,5 +1,12 @@
-import { PARK, PersistentSubscriptionToStream } from '@eventstore/db-client';
+import {
+  EventType,
+  PARK,
+  PersistentSubscriptionToStream,
+  PersistentSubscriptionToStreamResolvedEvent,
+  persistentSubscriptionToStreamSettingsFromDefaults,
+} from '@eventstore/db-client';
 import { Controller, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { TodoService } from 'src/todo/application/todo.service';
 import { ESDBCoreService } from 'src/todo/infrastructure/persistence/esdb/core/esdb-core.service';
 
 @Controller()
@@ -7,7 +14,10 @@ export class ESDBSubscription implements OnModuleInit, OnModuleDestroy {
   todoListSubscription: PersistentSubscriptionToStream;
   todoItemSubscription: PersistentSubscriptionToStream;
 
-  constructor(private readonly esdbCoreService: ESDBCoreService) {}
+  constructor(
+    private readonly esdbCoreService: ESDBCoreService,
+    private readonly todoService: TodoService,
+  ) {}
 
   async onModuleInit() {
     await this.setupSubscriptions();
@@ -39,14 +49,22 @@ export class ESDBSubscription implements OnModuleInit, OnModuleDestroy {
       try {
         for await (const event of subscription) {
           try {
-            console.log(event.event.data);
+            if (
+              event.event.data instanceof Uint8Array ||
+              event.event?.isJson === false
+            ) {
+              throw new Error('incorrect event type!');
+            }
+            console.log(1);
+            await this.todoService.publishSubscriptionEvents(event.event);
             await subscription.ack(event);
           } catch (error) {
             await subscription.nack(PARK, error.toString(), event);
+            console.error(error);
           }
         }
       } catch (error) {
-        // Implement reconnection logic here
+        await this.setupSubscriptions();
       }
     })();
   }

@@ -62,7 +62,6 @@ export class ESDBCoreService {
       let groupName = await this.redisService.get(
         `${streamName}-subsubscription-name`,
       );
-      console.log(groupName);
       if (!groupName) {
         await this.client.createPersistentSubscriptionToStream(
           streamName,

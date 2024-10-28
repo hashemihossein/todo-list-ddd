@@ -8,5 +8,7 @@ export class TodoListCreatedEventHandler
 {
   constructor(private readonly esdbRepository: ESDBRepository) {}
 
-  async handle(event: TodoListCreatedEvent) {}
+  async handle(event: TodoListCreatedEvent) {
+    console.log('4', event);
+  }
 }

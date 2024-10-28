@@ -11,10 +11,10 @@ export class EventSerializer {
 
     if (!eventType) throw new Error('Incompatible event type');
 
-    const aggregateId = `${dispatcher.constructor.name}-${dispatcher.id}`;
+    const streamId = `${dispatcher.constructor.name}-${dispatcher.id}`;
 
     return {
-      id: aggregateId,
+      id: streamId,
       position: dispatcher.version.value + 1,
       type: eventType,
       data: this.toJSON(event),

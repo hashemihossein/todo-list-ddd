@@ -22,9 +22,7 @@ export class EventStorePublisher
     event: T,
     dispatcher: VersionedAggregateRoot,
   ) {
-    console.log('test publish', event);
     const serializebleEvent = this.eventSerializer.serialize(event, dispatcher);
-    console.log(serializebleEvent, ':D:D;');
     return this.esdbWriteRepository.appendToStream(serializebleEvent);
   }
 
@@ -32,15 +30,12 @@ export class EventStorePublisher
     events: T[],
     dispatcher: VersionedAggregateRoot,
   ) {
-    console.log('test publishAll', events);
-
     const SerializableEvents = events
       .map((event) => this.eventSerializer.serialize(event, dispatcher))
       .map((serializableEvent) => ({
         ...serializableEvent,
         position: dispatcher.version.value + 1,
       }));
-    console.log(SerializableEvents);
 
     return this.esdbWriteRepository.appendToStream(SerializableEvents[0]);
   }
