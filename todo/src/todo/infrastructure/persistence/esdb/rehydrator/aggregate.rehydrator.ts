@@ -14,9 +14,15 @@ export class AggregateRehydrator {
     aggregateId: string,
     aggregateCls: Type<T>,
   ): Promise<T> {
-    const streamId = aggregateCls.constructor.name + aggregateId;
+    const streamId = `${aggregateCls.constructor.name}-${aggregateId}`;
     const events =
       await this.esdbWriteRepository.readEventsFromStream(streamId);
+    console.log(111, ':D:D:');
+
+    for await (const event of events) {
+      console.log(event, ':D:D:');
+    }
+    console.log(222, ':D:D:');
 
     const AggregateClsWithDispatcher =
       this.eventPublisher.mergeClassContext(aggregateCls);

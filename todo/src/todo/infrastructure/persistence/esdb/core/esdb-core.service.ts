@@ -46,6 +46,7 @@ export class ESDBCoreService {
           streamName,
           subName,
         );
+
       return subscritption;
     } catch (error) {
       this.logger.error(error);

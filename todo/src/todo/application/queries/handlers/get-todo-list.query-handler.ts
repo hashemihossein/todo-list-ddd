@@ -11,12 +11,6 @@ export class GetTodoListQueryHandler
     private readonly readTodoListRepository: ReadTodoListRepository,
   ) {}
   async execute(query: GetTodoListQuery): Promise<TodoListReadModel> {
-    const todoList = await this.readTodoListRepository.findOne(query.id);
-
-    if (!todoList) {
-      throw new Error(`list with id: ${query.id} not found`);
-    }
-
-    return todoList;
+    return null;
   }
 }

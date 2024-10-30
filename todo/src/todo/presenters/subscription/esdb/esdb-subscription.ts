@@ -55,7 +55,6 @@ export class ESDBSubscription implements OnModuleInit, OnModuleDestroy {
             ) {
               throw new Error('incorrect event type!');
             }
-            console.log(1);
             await this.todoService.publishSubscriptionEvents(event.event);
             await subscription.ack(event);
           } catch (error) {

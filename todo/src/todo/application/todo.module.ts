@@ -11,6 +11,7 @@ import { TodoListCreatedEventHandler } from './event-handlers/todo-list-created.
 import { TodoService } from './todo.service';
 import { ESDBSubscription } from '../presenters/subscription/esdb/esdb-subscription';
 import { PersistenceModule } from '../infrastructure/persistence/persistence.module';
+import { UpdateTodoListCommandHandler } from './commands/handlers/update-todo-list.command-handler';
 
 @Module({
   imports: [CqrsModule, PersistenceModule],
@@ -22,6 +23,7 @@ import { PersistenceModule } from '../infrastructure/persistence/persistence.mod
     TodoListCreatedEventHandler,
     CreateTodoItemCommandHandler,
     CreateTodoListCommandHandler,
+    UpdateTodoListCommandHandler,
   ],
   exports: [TodoModule],
 })
