@@ -31,8 +31,6 @@ export class TodoItemFactory {
       0,
     );
 
-    todoItem.apply(new TodoItemCreatedEvent(todoItem));
-
     return todoItem;
   }
 }

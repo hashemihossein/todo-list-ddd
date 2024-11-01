@@ -1,8 +1,9 @@
-import { TodoList } from 'src/todo/domain/todo-list';
 import { TodoListReadModel } from '../../../domain/read-models/todo-list.read-model';
 
-export abstract class ReadTodoListRepository {
+export abstract class TodoListReadRepository {
   abstract upsert(
-    alarm: Pick<TodoList, 'id'> & Partial<TodoList>,
+    alarm: Pick<TodoListReadModel, 'id'> & Partial<TodoListReadModel>,
   ): Promise<TodoListReadModel>;
+
+  abstract read(listId: string): Promise<TodoListReadModel>;
 }

@@ -1,7 +1,9 @@
 import {
   AppendResult,
   EventStoreDBClient,
+  ExpectedRevision,
   FORWARDS,
+  ReadRevision,
   START,
 } from '@eventstore/db-client';
 import { Injectable } from '@nestjs/common';
@@ -10,6 +12,8 @@ import { SerializableEvent } from 'src/todo/domain/events/interfaces/serializabl
 import { ESDBCoreService } from '../core/esdb-core.service';
 import { EventMapper } from '../mappers/event.mapper';
 import { Error } from 'mongoose';
+import { ManyToOne } from 'typeorm';
+import { VersionedAggregateRoot } from 'src/todo/domain/aggregate-root/versioned-aggregate-root';
 
 @Injectable()
 export class ESDBWriteRepository extends ESDBRepository {
@@ -21,7 +25,7 @@ export class ESDBWriteRepository extends ESDBRepository {
 
   async appendToStream(
     eventOrEvents: SerializableEvent | SerializableEvent[],
-    expectedRevision: 'any' | 'no_stream' | 'stream_exists' = 'any',
+    snapshot: SerializableEvent = null,
   ): Promise<boolean> {
     let events: SerializableEvent[];
     if (!Array.isArray(eventOrEvents)) {
@@ -31,17 +35,27 @@ export class ESDBWriteRepository extends ESDBRepository {
     if (!events.length) {
       throw new Error('nothing for append to stream!');
     }
+    const expectedRevision: ExpectedRevision =
+      events[0].position === -1n ? 'no_stream' : events[0].position.valueOf();
 
     const mappedEvents = EventMapper.toPersistence(events);
     try {
       const appendResult: AppendResult = await this.client.appendToStream(
-        'TodoList-bcb0fbdb-faa7-444f-b0dd-09744ca4aa6d',
-        [...mappedEvents, ...mappedEvents, ...mappedEvents],
+        events[0].id,
+        mappedEvents,
         {
           expectedRevision: expectedRevision,
         },
       );
-      console.log(appendResult.nextExpectedRevision, appendResult.position);
+
+      if (snapshot) {
+        const snapshotExpectedRevision: bigint =
+          expectedRevision === 'no_stream'
+            ? 1n
+            : events[0].position.valueOf() + BigInt(events.length);
+        await this._appendSnapshotToStream(snapshot, snapshotExpectedRevision);
+      }
+
       return appendResult.success;
     } catch (error) {
       console.error(error);
@@ -49,10 +63,34 @@ export class ESDBWriteRepository extends ESDBRepository {
   }
 
   async readEventsFromStream(streamId: string) {
+    const streamMetadata = await this.client.getStreamMetadata(streamId);
+    let fromRevision: ReadRevision = START;
+    if (streamMetadata.metadata?.lastSnapshotRevision) {
+      if (typeof streamMetadata.metadata?.lastSnapshotRevision === 'string') {
+        fromRevision = BigInt(streamMetadata.metadata?.lastSnapshotRevision);
+      }
+    }
     const events = this.client.readStream(streamId, {
-      fromRevision: START,
+      fromRevision,
       direction: FORWARDS,
     });
     return events;
+  }
+
+  private async _appendSnapshotToStream(
+    snapshot: SerializableEvent,
+    snapshotExpectedRevision: bigint,
+  ): Promise<void> {
+    try {
+      const appendableSnapshot = EventMapper.toPersistence([snapshot]);
+      await this.client.appendToStream(snapshot.id, appendableSnapshot, {
+        expectedRevision: snapshotExpectedRevision,
+      });
+      await this.client.setStreamMetadata(snapshot.id, {
+        lastSnapshotRevision: snapshotExpectedRevision.toString(),
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 }

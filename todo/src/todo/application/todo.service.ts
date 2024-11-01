@@ -24,6 +24,7 @@ export class TodoService {
   async publishSubscriptionEvents(event: RecievedEventType): Promise<void> {
     const deserializedEvent: SerializableEvent =
       this.eventDeserializer.deserialize(event);
+
     this.eventBus.subject$.next(deserializedEvent.data);
   }
 

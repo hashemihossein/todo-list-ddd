@@ -1,13 +1,48 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { CreateTodoItemCommand } from '../create-todo-item.command';
 import { TodoItemRepository } from '../../ports/todo-item/todo-item.repository';
 import { TodoItemFactory } from 'src/todo/domain/factories/todo-item.factory';
 import { TodoItem } from 'src/todo/domain/todo-item';
+import { AggregateRehydrator } from 'src/todo/infrastructure/persistence/esdb/rehydrator/aggregate.rehydrator';
+import { TodoList } from 'src/todo/domain/todo-list';
+import { TodoItemAddedToListEvent } from 'src/todo/domain/events/todo-list/todo-item-added-to-list.event';
+import { TodoItemCreatedEvent } from 'src/todo/domain/events/todo-item/todo-item-created.event';
 
 @CommandHandler(CreateTodoItemCommand)
 export class CreateTodoItemCommandHandler
   implements ICommandHandler<CreateTodoItemCommand>
 {
-  constructor() {}
-  async execute(command: CreateTodoItemCommand): Promise<void> {}
+  constructor(
+    private readonly aggregateRehydrator: AggregateRehydrator,
+    private readonly eventPublisher: EventPublisher,
+    private readonly todoItemFactory: TodoItemFactory,
+  ) {}
+  async execute(command: CreateTodoItemCommand): Promise<void> {
+    const todoList = await this.aggregateRehydrator.rehydrate(
+      command.listId,
+      TodoList,
+    );
+
+    if (!todoList) {
+      throw new Error(`ther is no todo list with id: ${command.listId}`);
+    }
+
+    const todoItem = this.todoItemFactory.create(
+      command.title,
+      command.description,
+      command.listId,
+      command.priority,
+      command.estimatedTime,
+    );
+    todoList.items.push(todoItem.id);
+
+    todoList.apply(new TodoItemAddedToListEvent(todoItem.id));
+    todoItem.apply(new TodoItemCreatedEvent(todoItem));
+
+    this.eventPublisher.mergeObjectContext(todoList);
+    this.eventPublisher.mergeObjectContext(todoItem);
+
+    todoItem.commit();
+    todoList.commit();
+  }
 }

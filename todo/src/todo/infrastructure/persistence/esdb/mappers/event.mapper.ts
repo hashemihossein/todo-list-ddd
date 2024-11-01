@@ -8,9 +8,6 @@ export class EventMapper {
       jsonEvent({
         data: event.data,
         type: event.type,
-        metadata: {
-          position: event.position,
-        },
       }),
     );
     return mappedEvents;

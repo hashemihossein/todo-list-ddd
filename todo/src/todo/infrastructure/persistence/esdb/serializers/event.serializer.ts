@@ -15,7 +15,7 @@ export class EventSerializer {
 
     return {
       id: streamId,
-      position: dispatcher.version.value + 1,
+      position: dispatcher.version.value.valueOf(),
       type: eventType,
       data: this.toJSON(event),
     };

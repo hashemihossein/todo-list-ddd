@@ -9,18 +9,34 @@ import { TodoListFactory } from 'src/todo/domain/factories/todo-list.factory';
 import { TodoListCreatedEvent } from 'src/todo/domain/events/todo-list/todo-list-created.event';
 import { UpdateTodoListCommand } from '../udpate-todo-list.command';
 import { AggregateRehydrator } from 'src/todo/infrastructure/persistence/esdb/rehydrator/aggregate.rehydrator';
+import { TodoListUpdatedEvent } from 'src/todo/domain/events/todo-list/todo-list-updated.event';
 
 @CommandHandler(UpdateTodoListCommand)
 export class UpdateTodoListCommandHandler
   implements ICommandHandler<UpdateTodoListCommand>
 {
   constructor(
-    private readonly todoListFactory: TodoListFactory,
     private readonly aggregateRehydrator: AggregateRehydrator,
     private readonly eventPublisher: EventPublisher,
   ) {}
   async execute(command: UpdateTodoListCommand): Promise<TodoList> {
-    this.aggregateRehydrator.rehydrate(command.id, TodoList);
+    const todoList = await this.aggregateRehydrator.rehydrate(
+      command.id,
+      TodoList,
+    );
+
+    todoList.title = command.title;
+    todoList.description = command.description;
+
+    todoList.apply(
+      new TodoListUpdatedEvent({
+        id: todoList.id,
+        title: command.title,
+        description: command.description,
+      }),
+    );
+    this.eventPublisher.mergeObjectContext(todoList);
+    todoList.commit();
 
     return null;
   }

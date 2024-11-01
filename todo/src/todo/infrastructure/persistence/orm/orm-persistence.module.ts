@@ -4,7 +4,7 @@ import {
   ReadTodoList,
   ReadTodoListSchema,
 } from './schemas/read-todo-list.schema';
-import { ReadTodoListRepository } from 'src/todo/application/ports/todo-list/read-todo-list.repository';
+import { TodoListReadRepository } from 'src/todo/application/ports/todo-list/read-todo-list.repository';
 import { OrmReadTodoListRepository } from './repositories/read-todo-list.repository';
 
 @Module({
@@ -15,10 +15,10 @@ import { OrmReadTodoListRepository } from './repositories/read-todo-list.reposit
   ],
   providers: [
     {
-      provide: ReadTodoListRepository,
+      provide: TodoListReadRepository,
       useClass: OrmReadTodoListRepository,
     },
   ],
-  exports: [ReadTodoListRepository],
+  exports: [TodoListReadRepository],
 })
 export class OrmPersistenceModule {}

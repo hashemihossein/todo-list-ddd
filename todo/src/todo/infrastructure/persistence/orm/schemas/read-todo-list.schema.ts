@@ -24,8 +24,8 @@ export class ReadTodoList {
         listId: string;
         priority: string;
         state: string;
-        estimatedTime: string;
-        loggedTime: string;
+        estimatedTime: number;
+        loggedTime: number;
       }>,
     ),
   )
@@ -36,3 +36,5 @@ export class ReadTodoList {
 }
 
 export const ReadTodoListSchema = SchemaFactory.createForClass(ReadTodoList);
+
+ReadTodoListSchema.index({ id: 1 }, { unique: true });

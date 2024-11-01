@@ -1,17 +1,38 @@
 import { AggregateRoot, IEvent } from '@nestjs/cqrs';
 import { Version } from './object-value/version';
-import { SerializableEvent } from '../events/interfaces/serializable-event';
+import {
+  SerializableEvent,
+  SerializedEventPayload,
+} from '../events/interfaces/serializable-event';
+import { AggregateSnapshotEvent } from '../events/aggregate-snapshot.event';
+import { SnapshotThreshold } from './object-value/snapshot-threshold';
 
 const VERSION = Symbol('version');
 
 export class VersionedAggregateRoot extends AggregateRoot {
   public id: string;
 
-  private [VERSION] = new Version(0);
+  private [VERSION] = new Version(BigInt(-1));
+  #snapshotThreshold = new SnapshotThreshold(20);
+
+  get snapshotEvent() {
+    return new AggregateSnapshotEvent(this);
+  }
+
+  get snapshotThreshold(): number {
+    return this.#snapshotThreshold.value;
+  }
+
+  set snapshotThreshold(threshold: number) {
+    this.#snapshotThreshold = new SnapshotThreshold(threshold);
+  }
 
   loadFromHistory(history: SerializableEvent[]): void {
     const domainEvents = history.map((event) => event.data);
     super.loadFromHistory(domainEvents);
+
+    const newVersion = history.at(-1).position;
+    this.setVersion(new Version(newVersion));
   }
 
   get version(): Version {
@@ -20,5 +41,11 @@ export class VersionedAggregateRoot extends AggregateRoot {
 
   private setVersion(version: Version): void {
     this[VERSION] = version;
+  }
+
+  [`on${AggregateSnapshotEvent.name}`](
+    event: SerializedEventPayload<AggregateSnapshotEvent>,
+  ) {
+    Object.assign(this, event.aggregate);
   }
 }

@@ -4,4 +4,8 @@ export class TodoItemPriority {
   equals(value: string): boolean {
     return this.value == value;
   }
+
+  toJSON() {
+    return this.value;
+  }
 }

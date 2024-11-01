@@ -9,6 +9,6 @@ export type SerializedEventPayload<T> = T extends object
 export interface SerializableEvent<T = any> {
   id: string;
   type: string;
-  position: number;
+  position: BigInt;
   data: SerializedEventPayload<T>;
 }

@@ -10,8 +10,8 @@ export class TodoListReadModel {
       listId: string;
       priority: string;
       state: string;
-      estimatedTime: string;
-      loggedTime: string;
+      estimatedTime: number;
+      loggedTime: number;
     }>,
     public readonly userId: string,
   ) {}
