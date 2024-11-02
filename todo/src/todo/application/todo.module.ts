@@ -11,6 +11,7 @@ import { PersistenceModule } from '../infrastructure/persistence/persistence.mod
 import { UpdateTodoListCommandHandler } from './commands/handlers/update-todo-list.command-handler';
 import { TodoItemFactory } from '../domain/factories/todo-item.factory';
 import { TodoItemCreatedEventHandler } from './event-handlers/todo-item-created.event-handler';
+import { UpdateTodoItemCommandHandler } from './commands/handlers/update-todo-item.command-handler';
 
 @Module({
   imports: [CqrsModule, PersistenceModule],
@@ -24,6 +25,7 @@ import { TodoItemCreatedEventHandler } from './event-handlers/todo-item-created.
     CreateTodoItemCommandHandler,
     CreateTodoListCommandHandler,
     UpdateTodoListCommandHandler,
+    UpdateTodoItemCommandHandler
   ],
   exports: [TodoModule],
 })

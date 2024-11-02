@@ -15,9 +15,7 @@ export class TodoItemFactory {
     estimatedTime: number,
   ): TodoItem {
     const id = randomUUID();
-    const todoItemPriority = new TodoItemPriority(
-      priority as TodoItemPriority['value'],
-    );
+    const todoItemPriority = new TodoItemPriority(priority);
     const todoItemState = new TodoItemState('todo');
 
     const todoItem = new TodoItem(

@@ -18,6 +18,14 @@ export class TodoItem extends VersionedAggregateRoot {
     super();
   }
 
+  setState(state: string) {
+    this.state = new TodoItemState(state)
+  }
+
+  setPriority(priority: string) {
+    this.priority = new TodoItemPriority(priority)
+  }
+  
   [`on${TodoItemCreatedEvent.name}`](
     event: SerializedEventPayload<TodoItemCreatedEvent>,
   ) {

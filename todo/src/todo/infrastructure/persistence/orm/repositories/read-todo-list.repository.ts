@@ -15,16 +15,14 @@ export class OrmReadTodoListRepository implements TodoListReadRepository {
 
   async upsert(
     todoList: Pick<TodoListReadModel, 'id'> & Partial<TodoListReadModel>,
-  ): Promise<TodoListReadModel> {
-    const upsertedTodoList = await this.readTodoListRepository.findOneAndUpdate(
+  ): Promise<void> {
+    await this.readTodoListRepository.findOneAndUpdate(
       { id: todoList.id },
       todoList,
       {
         upsert: true,
       },
     );
-
-    return upsertedTodoList;
   }
 
   async read(listId: string): Promise<TodoListReadModel> {
@@ -32,5 +30,9 @@ export class OrmReadTodoListRepository implements TodoListReadRepository {
       id: listId,
     });
     return todoListReadModel;
+  }
+
+  async delete(listId: string): Promise<void> {
+    await this.readTodoListRepository.deleteOne({id: listId})
   }
 }

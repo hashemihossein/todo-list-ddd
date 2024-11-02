@@ -5,6 +5,7 @@ import { SerializedEventPayload } from './events/interfaces/serializable-event';
 import { TodoListUpdatedEvent } from './events/todo-list/todo-list-updated.event';
 import { TodoItemAddedToListEvent } from './events/todo-list/todo-item-added-to-list.event';
 import { TodoItemFactory } from './factories/todo-item.factory';
+import { TodoListDeletedEvent } from './events/todo-list/todo-list-deleted.event';
 
 export class TodoList extends VersionedAggregateRoot {
   constructor(
@@ -37,5 +38,11 @@ export class TodoList extends VersionedAggregateRoot {
     event: SerializedEventPayload<TodoItemAddedToListEvent>,
   ) {
     this.items.push(event.todoItemId);
+  }
+
+  [`on${TodoListDeletedEvent.name}`](
+    event: SerializedEventPayload<TodoListDeletedEvent>
+  ){
+    throw new Error(`Todo list with id: ${event.payload.id} has been deleted before`)
   }
 }

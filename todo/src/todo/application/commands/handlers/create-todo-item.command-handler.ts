@@ -17,7 +17,7 @@ export class CreateTodoItemCommandHandler
     private readonly eventPublisher: EventPublisher,
     private readonly todoItemFactory: TodoItemFactory,
   ) {}
-  async execute(command: CreateTodoItemCommand): Promise<void> {
+  async execute(command: CreateTodoItemCommand): Promise<TodoItem> {
     const todoList = await this.aggregateRehydrator.rehydrate(
       command.listId,
       TodoList,
@@ -44,5 +44,7 @@ export class CreateTodoItemCommandHandler
 
     todoItem.commit();
     todoList.commit();
+
+    return todoItem
   }
 }

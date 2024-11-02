@@ -25,8 +25,12 @@ export class UpdateTodoListCommandHandler
       TodoList,
     );
 
-    todoList.title = command.title;
-    todoList.description = command.description;
+    if ( command?.title ) {
+      todoList.title = command.title;
+    }
+    if ( command?.description ) {
+      todoList.description = command.description;
+    }
 
     todoList.apply(
       new TodoListUpdatedEvent({
@@ -38,6 +42,6 @@ export class UpdateTodoListCommandHandler
     this.eventPublisher.mergeObjectContext(todoList);
     todoList.commit();
 
-    return null;
+    return todoList;
   }
 }
