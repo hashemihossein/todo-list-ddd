@@ -11,7 +11,7 @@ export class TodoList extends VersionedAggregateRoot {
     public id: string,
     public title: string,
     public description: string,
-    public items: string[],
+    public items: string[] = [],
     public userId: string,
   ) {
     super();

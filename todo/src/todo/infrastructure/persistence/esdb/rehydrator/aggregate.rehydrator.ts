@@ -32,6 +32,8 @@ export class AggregateRehydrator {
         events.push(this.eventDeserializer.deserialize(event.event));
       }
 
+      console.dir(events, { depth: Infinity });
+
       const aggregateInstance = new aggregateCls(aggregateId);
       this.eventPublisher.mergeObjectContext(aggregateInstance);
       aggregateInstance.loadFromHistory(events);

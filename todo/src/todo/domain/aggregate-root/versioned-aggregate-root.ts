@@ -13,7 +13,7 @@ export class VersionedAggregateRoot extends AggregateRoot {
   public id: string;
 
   private [VERSION] = new Version(BigInt(-1));
-  #snapshotThreshold = new SnapshotThreshold(20);
+  #snapshotThreshold = new SnapshotThreshold(5);
 
   get snapshotEvent() {
     return new AggregateSnapshotEvent(this);
@@ -25,6 +25,16 @@ export class VersionedAggregateRoot extends AggregateRoot {
 
   set snapshotThreshold(threshold: number) {
     this.#snapshotThreshold = new SnapshotThreshold(threshold);
+  }
+
+  apply(event: unknown, options?: unknown): void {
+    if (typeof options === 'object') {
+      super.apply(event, { skipHandler: true, ...options });
+    } else if (typeof options === 'boolean') {
+      super.apply(event, options);
+    } else {
+      super.apply(event, { skipHandler: true });
+    }
   }
 
   loadFromHistory(history: SerializableEvent[]): void {

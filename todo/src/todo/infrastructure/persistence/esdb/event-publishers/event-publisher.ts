@@ -28,23 +28,42 @@ export class EventStorePublisher
     dispatcher: VersionedAggregateRoot,
   ) {
     const serializebleEvent = this.eventSerializer.serialize(event, dispatcher);
-    return this.esdbWriteRepository.appendToStream(serializebleEvent);
+    let snapshot: SerializableEvent = this._getAggregateSnapshot(dispatcher, 1);
+    return this.esdbWriteRepository.appendToStream(serializebleEvent, snapshot);
   }
 
   async publishAll?<T extends IEvent>(
     events: T[],
     dispatcher: VersionedAggregateRoot,
   ) {
-    const SerializableEvents = events.map((event) =>
+    if (events.length === 0) {
+      throw new Error('no events to publish');
+    }
+
+    const serializableEvents = events.map((event) =>
       this.eventSerializer.serialize(event, dispatcher),
     );
 
-    let snapshot: SerializableEvent = null;
+    let snapshot: SerializableEvent = this._getAggregateSnapshot(
+      dispatcher,
+      serializableEvents.length,
+    );
 
+    return await this.esdbWriteRepository.appendToStream(
+      serializableEvents[0],
+      snapshot,
+    );
+  }
+
+  private _getAggregateSnapshot(
+    dispatcher: VersionedAggregateRoot,
+    newEvents: number,
+  ): SerializableEvent {
+    let snapshot: SerializableEvent = null;
     if (
       dispatcher.version.value.valueOf() /
         BigInt(dispatcher.snapshotThreshold) <
-      (dispatcher.version.value.valueOf() + BigInt(SerializableEvents.length)) /
+      (dispatcher.version.value.valueOf() + BigInt(newEvents)) /
         BigInt(dispatcher.snapshotThreshold)
     ) {
       snapshot = this.eventSerializer.serialize(
@@ -52,13 +71,8 @@ export class EventStorePublisher
         dispatcher,
       );
 
-      snapshot.position =
-        snapshot.position.valueOf() + BigInt(SerializableEvents.length);
+      snapshot.position = snapshot.position.valueOf() + BigInt(newEvents);
     }
-
-    return await this.esdbWriteRepository.appendToStream(
-      SerializableEvents[0],
-      snapshot,
-    );
+    return snapshot;
   }
 }

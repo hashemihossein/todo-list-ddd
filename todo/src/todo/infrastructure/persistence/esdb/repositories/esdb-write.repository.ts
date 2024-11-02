@@ -83,11 +83,15 @@ export class ESDBWriteRepository extends ESDBRepository {
   ): Promise<void> {
     try {
       const appendableSnapshot = EventMapper.toPersistence([snapshot]);
-      await this.client.appendToStream(snapshot.id, appendableSnapshot, {
-        expectedRevision: snapshotExpectedRevision,
-      });
+      const appendResult: AppendResult = await this.client.appendToStream(
+        snapshot.id,
+        appendableSnapshot,
+        {
+          expectedRevision: snapshotExpectedRevision,
+        },
+      );
       await this.client.setStreamMetadata(snapshot.id, {
-        lastSnapshotRevision: snapshotExpectedRevision.toString(),
+        lastSnapshotRevision: appendResult.nextExpectedRevision.toString(),
       });
     } catch (error) {
       console.error(error);
