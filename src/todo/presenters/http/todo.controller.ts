@@ -18,6 +18,7 @@ import { UpdateTodoListCommand } from 'src/todo/application/commands/udpate-todo
 import { UpdateTodoItemCommand } from 'src/todo/application/commands/udpate-todo-item.command';
 import { DeleteTodoListCommand } from 'src/todo/application/commands/delete-todo-list.command';
 import { DeleteTodoItemCommand } from 'src/todo/application/commands/delete-todo-item.command';
+import { GetTodoListQuery } from 'src/todo/application/queries/get-todo-list.query';
 
 @Controller('todo')
 export class TodoController {
@@ -50,12 +51,7 @@ export class TodoController {
 
   @Get('list/:id')
   getTodoList(@Param('id') id: string) {
-    return null;
-  }
-
-  @Get('item/:id')
-  getTodoItem(@Param('id') id: string) {
-    return null;
+    return this.todoService.getTodoList(new GetTodoListQuery(id));
   }
 
   @Delete('list/:id')
