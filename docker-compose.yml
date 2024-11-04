@@ -43,23 +43,23 @@ services:
     networks:
       - local-kafka
 
-  todo-service:
-    build: ./todo
-    container_name: todo_service
-    depends_on:
-      - todo_postgres
-      - todo_mongo
-      - eventstore
-      - redis
-    environment:
-      - POSTGRES_HOST=todo_postgres
-      - POSTGRES_DB=todo_write_db
-      - POSTGRES_USER=youruser
-      - POSTGRES_PASSWORD=yourpassword
-      - MONGO_HOST=todo_mongo
-      - MONGO_DB=todo_read_db
-    ports:
-      - '3003:3003'
+  # todo-service:
+  #   build: .
+  #   container_name: todo_service
+  #   depends_on:
+  #     - todo_mongo
+  #     - eventstore
+  #     - redis
+  #   environment:
+  #     - MONGO_HOST=todo_mongo
+  #     - MONGO_DB=todo_read_db
+  #     - REDIS_HOST=redis
+  #     - REDIS_PORT=6379
+  #     - REDIS_PASSWORD=redis-password
+  #     - ESDB_HOST=eventstore
+  #     - ESDB_PORT=2113
+  #   ports:
+  #     - '3003:3003'
 
   todo_mongo:
     image: mongo:4.2.5

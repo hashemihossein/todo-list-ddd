@@ -1,6 +1,6 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { UUID } from 'typeorm/driver/mongodb/bson.typings';
+import { UUID } from 'mongodb';
 
 export type ReadTodoListDocument = HydratedDocument<ReadTodoList>;
 

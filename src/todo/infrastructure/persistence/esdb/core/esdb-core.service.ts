@@ -14,7 +14,7 @@ import { RedisService } from 'src/todo/infrastructure/in-memory/redis/redis.serv
 export class ESDBCoreService {
   private client: EventStoreDBClient;
   // private connectionString = `esdb://eventstore:2113?tls=false`;
-  private connectionString = `esdb://127.0.0.1:2113?tls=false`;
+  private connectionString = `esdb://${this.configService.get<string>('ESDB_HOST', 'localhost')}:${this.configService.get<string>('ESDB_PORT', '2113')}?tls=false`;
 
   private readonly logger = new Logger(ESDBCoreService.name);
   private reconnecting = false;
@@ -46,7 +46,6 @@ export class ESDBCoreService {
           streamName,
           subName,
         );
-
       return subscritption;
     } catch (error) {
       this.logger.error(error);

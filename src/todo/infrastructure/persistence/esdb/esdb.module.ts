@@ -9,9 +9,18 @@ import { CqrsModule, EventBus } from '@nestjs/cqrs';
 import { EventSerializer } from './serializers/event.serializer';
 import { EventDeserializer } from './deserializers/event.deserializer';
 import { AggregateRehydrator } from './rehydrator/aggregate.rehydrator';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [ESDBCoreModule, RedisModule, CqrsModule],
+  imports: [
+    ESDBCoreModule,
+    RedisModule,
+    CqrsModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+  ],
   providers: [
     ESDBCoreService,
     EventStorePublisher,

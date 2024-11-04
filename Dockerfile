@@ -1,10 +1,12 @@
 FROM node:16
 
+# RUN npm install -g pnpm
+
 WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm install --verbose
 
 COPY . .
 

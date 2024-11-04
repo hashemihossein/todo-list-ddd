@@ -12,8 +12,6 @@ import { SerializableEvent } from 'src/todo/domain/events/interfaces/serializabl
 import { ESDBCoreService } from '../core/esdb-core.service';
 import { EventMapper } from '../mappers/event.mapper';
 import { Error } from 'mongoose';
-import { ManyToOne } from 'typeorm';
-import { VersionedAggregateRoot } from 'src/todo/domain/aggregate-root/versioned-aggregate-root';
 
 @Injectable()
 export class ESDBWriteRepository extends ESDBRepository {
