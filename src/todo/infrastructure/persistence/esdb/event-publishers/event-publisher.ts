@@ -1,6 +1,7 @@
 import {
   ConsoleLogger,
   Injectable,
+  NotFoundException,
   OnApplicationBootstrap,
 } from '@nestjs/common';
 import { EventBus, IEvent, IEventPublisher } from '@nestjs/cqrs';
@@ -37,7 +38,7 @@ export class EventStorePublisher
     dispatcher: VersionedAggregateRoot,
   ) {
     if (events.length === 0) {
-      throw new Error('no events to publish');
+      throw new NotFoundException('no events to publish');
     }
 
     const serializableEvents = events.map((event) =>

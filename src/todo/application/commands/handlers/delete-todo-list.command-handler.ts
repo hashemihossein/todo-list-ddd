@@ -12,6 +12,7 @@ import { TodoListUpdatedEvent } from 'src/todo/domain/events/todo-list/todo-list
 import { DeleteTodoListCommand } from '../delete-todo-list.command';
 import { SerializedEventPayload } from 'src/todo/domain/events/interfaces/serializable-event';
 import { TodoListDeletedEvent } from 'src/todo/domain/events/todo-list/todo-list-deleted.event';
+import { NotFoundException } from '@nestjs/common';
 
 @CommandHandler(DeleteTodoListCommand)
 export class DeleteTodoListCommandHandler
@@ -21,16 +22,21 @@ export class DeleteTodoListCommandHandler
     private readonly aggregateRehydrator: AggregateRehydrator,
     private readonly eventPublisher: EventPublisher,
   ) {}
-  async execute(command: SerializedEventPayload<DeleteTodoListCommand>): Promise<TodoList> {
-    const todoList = await this.aggregateRehydrator.rehydrate(command.id, TodoList);
+  async execute(
+    command: SerializedEventPayload<DeleteTodoListCommand>,
+  ): Promise<TodoList> {
+    const todoList = await this.aggregateRehydrator.rehydrate(
+      command.id,
+      TodoList,
+    );
 
-    if ( !todoList ) {
-      throw new Error(`There is no list with id: ${command.id}`)
+    if (!todoList) {
+      throw new NotFoundException(`There is no list with id: ${command.id}`);
     }
 
-    todoList.apply(new TodoListDeletedEvent({id :command.id}))
-    this.eventPublisher.mergeObjectContext(todoList)
-    todoList.commit()
+    todoList.apply(new TodoListDeletedEvent({ id: command.id }));
+    this.eventPublisher.mergeObjectContext(todoList);
+    todoList.commit();
 
     return todoList;
   }

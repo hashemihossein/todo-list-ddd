@@ -11,6 +11,7 @@ import { DeleteTodoItemCommand } from '../delete-todo-item.command';
 import { TodoItem } from 'src/todo/domain/todo-item';
 import { ItemDeletedFromListEvent } from 'src/todo/domain/events/todo-list/item-deleted-from-list.event';
 import { TodoItemDeletedEvent } from 'src/todo/domain/events/todo-item/todo-item-deleted.event';
+import { NotFoundException } from '@nestjs/common';
 
 @CommandHandler(DeleteTodoItemCommand)
 export class DeleteTodoItemCommandHandler
@@ -27,23 +28,25 @@ export class DeleteTodoItemCommandHandler
     );
 
     if (!todoItem) {
-      throw new Error(`There is no item with id: ${command.id}`);
+      throw new NotFoundException(`There is no item with id: ${command.id}`);
     }
 
     const todoList = await this.aggregateRehydrator.rehydrate(
-      command.id,
+      todoItem.listId,
       TodoList,
     );
 
     if (!todoList) {
-      throw new Error(`There is no item with id: ${command.id}`);
+      throw new NotFoundException(`There is no item with id: ${command.id}`);
     }
 
-    if (todoList.items.includes(command.id)) {
-      throw new Error(`There is no item with id: ${command.id}`);
+    if (!todoList.items.includes(command.id)) {
+      throw new NotFoundException(`There is no item with id: ${command.id}`);
     }
 
-    todoList.items.filter((itemId) => itemId != command.id);
+    todoList.items = todoList.items.filter((itemId) => itemId != command.id);
+    console.log(todoList, 123123);
+
     todoList.apply(new ItemDeletedFromListEvent({ id: command.id }));
     this.eventPublisher.mergeObjectContext(todoList);
     todoList.commit();

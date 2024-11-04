@@ -6,7 +6,11 @@ import {
   persistentSubscriptionToStreamSettingsFromDefaults,
   START,
 } from '@eventstore/db-client';
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from 'src/todo/infrastructure/in-memory/redis/redis.service';
 
@@ -17,7 +21,7 @@ export class ESDBCoreService {
   private connectionString = `esdb://${this.configService.get<string>('ESDB_HOST', 'localhost')}:${this.configService.get<string>('ESDB_PORT', '2113')}?tls=false`;
 
   private readonly logger = new Logger(ESDBCoreService.name);
-  private reconnecting = false;
+  private retryOnSubscription = 3;
 
   constructor(
     private readonly configService: ConfigService,
@@ -49,7 +53,9 @@ export class ESDBCoreService {
       return subscritption;
     } catch (error) {
       this.logger.error(error);
-      throw new Error(`error while subscribing to stream: ${error}`);
+      throw new ServiceUnavailableException(
+        `error while subscribing to stream: ${error}`,
+      );
     }
   }
 
@@ -63,23 +69,40 @@ export class ESDBCoreService {
         `${streamName}-subsubscription-name`,
       );
       if (!groupName) {
-        await this.client.createPersistentSubscriptionToStream(
-          streamName,
-          `persistent-subscription-to${streamName}-stream`,
-          persistentSubscriptionToStreamSettingsFromDefaults({
-            resolveLinkTos: true,
-          }),
-        );
-        groupName = `persistent-subscription-to${streamName}-stream`;
-        await this.redisService.set(
-          `${streamName}-subsubscription-name`,
-          `persistent-subscription-to${streamName}-stream`,
-        );
+        try {
+          await this.client.createPersistentSubscriptionToStream(
+            streamName,
+            `persistent-subscription-to${streamName}-stream`,
+            persistentSubscriptionToStreamSettingsFromDefaults({
+              resolveLinkTos: true,
+            }),
+          );
+          groupName = `persistent-subscription-to${streamName}-stream`;
+          await this.redisService.set(
+            `${streamName}-subsubscription-name`,
+            `persistent-subscription-to${streamName}-stream`,
+          );
+        } catch (error) {
+          if (this.retryOnSubscription > 0) {
+            await this.client.deletePersistentSubscriptionToStream(
+              streamName,
+              `persistent-subscription-to${streamName}-stream`,
+            );
+            this.retryOnSubscription--;
+            return this._getSubscriptionGroupName(streamName);
+          } else {
+            throw new ServiceUnavailableException(
+              `Error on creating persistent subscription to stream: ${streamName}`,
+            );
+          }
+        }
       }
       return groupName;
     } catch (error) {
       this.logger.error(error);
-      throw new Error(`error while getting subscribing group name: ${error}`);
+      throw new ServiceUnavailableException(
+        `error while getting subscribing group name: ${error}`,
+      );
     }
   }
 }

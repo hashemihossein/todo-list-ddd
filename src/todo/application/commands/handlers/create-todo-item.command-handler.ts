@@ -6,6 +6,7 @@ import { AggregateRehydrator } from 'src/todo/infrastructure/persistence/esdb/re
 import { TodoList } from 'src/todo/domain/todo-list';
 import { ItemAddedToListEvent } from 'src/todo/domain/events/todo-list/item-added-to-list.event';
 import { TodoItemCreatedEvent } from 'src/todo/domain/events/todo-item/todo-item-created.event';
+import { NotFoundException } from '@nestjs/common';
 
 @CommandHandler(CreateTodoItemCommand)
 export class CreateTodoItemCommandHandler
@@ -23,7 +24,9 @@ export class CreateTodoItemCommandHandler
     );
 
     if (!todoList) {
-      throw new Error(`ther is no todo list with id: ${command.listId}`);
+      throw new NotFoundException(
+        `ther is no todo list with id: ${command.listId}`,
+      );
     }
 
     const todoItem = this.todoItemFactory.create(

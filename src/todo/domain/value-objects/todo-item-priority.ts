@@ -1,12 +1,18 @@
+import { BadRequestException } from '@nestjs/common';
+
 export class TodoItemPriority {
-  private static validStates: ['low' , 'medium' , 'high'] = ['low' , 'medium' , 'high'];
+  private static validStates: ['low', 'medium', 'high'] = [
+    'low',
+    'medium',
+    'high',
+  ];
   public readonly value: 'low' | 'medium' | 'high';
 
-  constructor( value: string) {
-    if ( !TodoItemPriority.isValidState(value) ) {
-      throw new Error(`Invalid state: ${value}`)
+  constructor(value: string) {
+    if (!TodoItemPriority.isValidState(value)) {
+      throw new BadRequestException(`Invalid state: ${value}`);
     }
-    this.value = value
+    this.value = value;
   }
 
   static isValidState(state: any): state is 'low' | 'medium' | 'high' {

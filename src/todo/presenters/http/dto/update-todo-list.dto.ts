@@ -1,15 +1,20 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateTodoListDto } from './create-todo-list.dto';
-import { IsOptional, IsString, Max } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional, IsString, Length, Max, MaxLength } from 'class-validator';
 
-export class UpdateTodoListDto extends PartialType(CreateTodoListDto) {
+export class UpdateTodoListDto {
+  @ApiProperty({
+    example: `updated title`,
+  })
   @IsOptional()
   @IsString()
-  @Max(30)
+  @MaxLength(100)
   title: string;
 
+  @ApiProperty({
+    example: `updated description`,
+  })
   @IsOptional()
   @IsString()
-  @Max(600)
+  @MaxLength(600)
   description: string;
 }

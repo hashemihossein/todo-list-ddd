@@ -16,7 +16,9 @@ export class TodoItemDeletedEventHandler
       event.payload.listId,
     );
 
-    todoListReadModel.items.filter((item) => item.id != event.payload.id);
+    todoListReadModel.items = todoListReadModel.items.filter(
+      (item) => item.id != event.payload.id,
+    );
 
     this.readTodoListRespository.upsertList(todoListReadModel);
   }

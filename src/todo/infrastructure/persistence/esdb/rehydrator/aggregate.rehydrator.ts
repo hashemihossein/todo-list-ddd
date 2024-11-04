@@ -1,4 +1,9 @@
-import { Injectable, Type } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  Type,
+} from '@nestjs/common';
 import { EventPublisher } from '@nestjs/cqrs';
 import { VersionedAggregateRoot } from 'src/todo/domain/aggregate-root/versioned-aggregate-root';
 import { ESDBWriteRepository } from '../repositories/esdb-write.repository';
@@ -27,7 +32,7 @@ export class AggregateRehydrator {
           event.event.data instanceof Uint8Array ||
           event.event?.isJson === false
         ) {
-          throw new Error('incorrect event type!');
+          throw new BadRequestException('incorrect event type!');
         }
         events.push(this.eventDeserializer.deserialize(event.event));
       }
@@ -38,7 +43,7 @@ export class AggregateRehydrator {
 
       return aggregateInstance;
     } catch (error) {
-      throw new Error(error);
+      throw new InternalServerErrorException(error);
     }
   }
 }

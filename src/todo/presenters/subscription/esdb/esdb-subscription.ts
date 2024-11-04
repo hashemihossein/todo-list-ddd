@@ -5,7 +5,12 @@ import {
   PersistentSubscriptionToStreamResolvedEvent,
   persistentSubscriptionToStreamSettingsFromDefaults,
 } from '@eventstore/db-client';
-import { Controller, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  OnModuleDestroy,
+  OnModuleInit,
+} from '@nestjs/common';
 import { TodoService } from 'src/todo/application/todo.service';
 import { ESDBCoreService } from 'src/todo/infrastructure/persistence/esdb/core/esdb-core.service';
 
@@ -53,7 +58,7 @@ export class ESDBSubscription implements OnModuleInit, OnModuleDestroy {
               event.event.data instanceof Uint8Array ||
               event.event?.isJson === false
             ) {
-              throw new Error('incorrect event type!');
+              throw new BadRequestException('incorrect event type!');
             }
             await this.todoService.publishSubscriptionEvents(event.event);
             await subscription.ack(event);

@@ -7,6 +7,7 @@ import { ItemAddedToListEvent } from './events/todo-list/item-added-to-list.even
 import { TodoItemFactory } from './factories/todo-item.factory';
 import { TodoListDeletedEvent } from './events/todo-list/todo-list-deleted.event';
 import { ItemDeletedFromListEvent } from './events/todo-list/item-deleted-from-list.event';
+import { NotFoundException } from '@nestjs/common';
 
 export class TodoList extends VersionedAggregateRoot {
   constructor(
@@ -50,7 +51,7 @@ export class TodoList extends VersionedAggregateRoot {
   [`on${TodoListDeletedEvent.name}`](
     event: SerializedEventPayload<TodoListDeletedEvent>,
   ) {
-    throw new Error(
+    throw new NotFoundException(
       `Todo list with id: ${event.payload.id} has been deleted before`,
     );
   }

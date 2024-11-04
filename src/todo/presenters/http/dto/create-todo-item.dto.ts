@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsNumber, IsString, Max } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Length,
+  Max,
+  MaxLength,
+} from 'class-validator';
 
 enum Priority {
   LOW = 'low',
@@ -19,7 +27,7 @@ export class CreateTodoItemDto {
     example: `My FIRST Todo Item: ${new Date()}`,
   })
   @IsString()
-  @Max(30)
+  @MaxLength(100)
   @IsNotEmpty()
   title: string;
 
@@ -28,7 +36,7 @@ export class CreateTodoItemDto {
     example: `Test Description ${Math.random() * 100}`,
   })
   @IsString()
-  @Max(600)
+  @MaxLength(600)
   description: string;
 
   @ApiProperty({
@@ -51,7 +59,7 @@ export class CreateTodoItemDto {
     required: true,
     type: String,
     enum: State,
-    example: `low`,
+    example: `todo`,
   })
   @IsEnum(State)
   state: State;

@@ -6,7 +6,7 @@ import {
   ReadRevision,
   START,
 } from '@eventstore/db-client';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ESDBRepository } from 'src/todo/application/ports/esdb.repository';
 import { SerializableEvent } from 'src/todo/domain/events/interfaces/serializable-event';
 import { ESDBCoreService } from '../core/esdb-core.service';
@@ -31,7 +31,7 @@ export class ESDBWriteRepository extends ESDBRepository {
     }
 
     if (!events.length) {
-      throw new Error('nothing for append to stream!');
+      throw new NotFoundException('nothing for append to stream!');
     }
     const expectedRevision: ExpectedRevision =
       events[0].position === -1n ? 'no_stream' : events[0].position.valueOf();

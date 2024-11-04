@@ -1,9 +1,9 @@
 export class TodoListReadModel {
   constructor(
-    public readonly id: string,
-    public readonly title: string,
-    public readonly description: string,
-    public readonly items: Array<{
+    public id: string,
+    public title: string,
+    public description: string,
+    public items: Array<{
       id: string;
       title: string;
       description: string;
@@ -13,6 +13,6 @@ export class TodoListReadModel {
       estimatedTime: number;
       loggedTime: number;
     }>,
-    public readonly userId: string,
+    public userId: string,
   ) {}
 }

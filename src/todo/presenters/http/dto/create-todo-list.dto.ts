@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsUUID, Max } from 'class-validator';
+import { IsString, IsUUID, Length, MaxLength } from 'class-validator';
 
 export class CreateTodoListDto {
   @ApiProperty({
@@ -7,7 +7,7 @@ export class CreateTodoListDto {
     example: `My FIRST Todo List: ${new Date()}`,
   })
   @IsString()
-  @Max(30)
+  @MaxLength(100)
   title: string;
 
   @ApiProperty({
@@ -15,7 +15,7 @@ export class CreateTodoListDto {
     example: `Test Description ${Math.random() * 100}`,
   })
   @IsString()
-  @Max(600)
+  @MaxLength(600)
   description: string;
 
   @ApiProperty({

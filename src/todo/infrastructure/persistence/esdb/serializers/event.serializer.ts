@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { VersionedAggregateRoot } from 'src/todo/domain/aggregate-root/versioned-aggregate-root';
 import { SerializableEvent } from 'src/todo/domain/events/interfaces/serializable-event';
 @Injectable()
@@ -9,7 +9,7 @@ export class EventSerializer {
   ): SerializableEvent<T> {
     const eventType = event.constructor.name;
 
-    if (!eventType) throw new Error('Incompatible event type');
+    if (!eventType) throw new BadRequestException('Incompatible event type');
 
     const streamId = `${dispatcher.constructor.name}-${dispatcher.id}`;
 

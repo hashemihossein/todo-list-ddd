@@ -35,33 +35,9 @@ export class TodoController {
     );
   }
 
-  @Post('item')
-  createTodoItem(@Body() createTodoItemDto: CreateTodoItemDto) {
-    return this.todoService.createTodoItem(
-      new CreateTodoItemCommand(
-        createTodoItemDto.title,
-        createTodoItemDto.description,
-        createTodoItemDto.listId,
-        createTodoItemDto.priority,
-        createTodoItemDto.state,
-        createTodoItemDto.estimatedTime,
-      ),
-    );
-  }
-
   @Get('list/:id')
   getTodoList(@Param('id') id: string) {
     return this.todoService.getTodoList(new GetTodoListQuery(id));
-  }
-
-  @Delete('list/:id')
-  deleteTodoList(@Param('id') id: string) {
-    return this.todoService.deleteTodoList(new DeleteTodoListCommand(id));
-  }
-
-  @Delete('item/:id')
-  deleteTodoItem(@Param('id') id: string) {
-    return this.todoService.deleteTodoItem(new DeleteTodoItemCommand(id));
   }
 
   @Patch('list/:id')
@@ -74,6 +50,25 @@ export class TodoController {
         id,
         updateTodoListDto.title,
         updateTodoListDto.description,
+      ),
+    );
+  }
+
+  @Delete('list/:id')
+  deleteTodoList(@Param('id') id: string) {
+    return this.todoService.deleteTodoList(new DeleteTodoListCommand(id));
+  }
+
+  @Post('item')
+  createTodoItem(@Body() createTodoItemDto: CreateTodoItemDto) {
+    return this.todoService.createTodoItem(
+      new CreateTodoItemCommand(
+        createTodoItemDto.title,
+        createTodoItemDto.description,
+        createTodoItemDto.listId,
+        createTodoItemDto.priority,
+        createTodoItemDto.state,
+        createTodoItemDto.estimatedTime,
       ),
     );
   }
@@ -94,5 +89,10 @@ export class TodoController {
         updateTodoItemDto.loggedTime,
       ),
     );
+  }
+
+  @Delete('item/:id')
+  deleteTodoItem(@Param('id') id: string) {
+    return this.todoService.deleteTodoItem(new DeleteTodoItemCommand(id));
   }
 }

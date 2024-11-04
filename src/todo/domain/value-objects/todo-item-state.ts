@@ -1,12 +1,18 @@
+import { BadRequestException } from '@nestjs/common';
+
 export class TodoItemState {
-  private static validStates: ['todo' , 'in-progress' , 'done'] = ['todo' , 'in-progress' , 'done'];
+  private static validStates: ['todo', 'in-progress', 'done'] = [
+    'todo',
+    'in-progress',
+    'done',
+  ];
   public readonly value: 'todo' | 'in-progress' | 'done';
 
-  constructor( value: string) {
-    if ( !TodoItemState.isValidState(value) ) {
-      throw new Error(`Invalid state: ${value}`)
+  constructor(value: string) {
+    if (!TodoItemState.isValidState(value)) {
+      throw new BadRequestException(`Invalid state: ${value}`);
     }
-    this.value = value
+    this.value = value;
   }
 
   static isValidState(state: any): state is 'todo' | 'in-progress' | 'done' {
