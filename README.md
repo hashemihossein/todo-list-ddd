@@ -101,16 +101,10 @@ src/todo/
 1. Clone the repository
 
 ```bash
-git clone [repository-url]
+git clone https://github.com/hashemihossein/todo-list-ddd.git
 ```
 
-2. Install dependencies
-
-```bash
-pnpm install
-```
-
-3. Start required services
+2. Start required services
 
 ```bash
 docker-compose up -d --build
